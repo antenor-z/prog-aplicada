@@ -8,9 +8,12 @@ print(df_sbrj)
 print("\n-----------------------------------------------------")
 print("1) Limpeza de dados")
 print("""
-1.a) Para valores ausentes de vento substitua pelo valor médio (satisfaz req 2)""")
+1.a) Para valores ausentes de vento substitua pelo valor médio a 
+velocidade e a direção por zero. (satisfaz req 2)""")
 df_sbrj["wind_direction"].fillna(0, inplace=True)
-df_sbrj["wind_speed"].fillna(0, inplace=True)
+df_sbrj["wind_speed"].fillna(df_sbrj["wind_speed"].mean(), inplace=True)
+print(df_sbrj)
+
 
 print("""
 1.b) A velocidade do vento está expressa em nós (milhas nauticas por hora) converta
