@@ -38,7 +38,7 @@ print(dif_temperatura_orvalho.max())
 
 print("""2.d) Crie a coluna dif_temp_orvalho com esta diferença e exiba uma categorização
 'pode chover' com True se a diferença for dois graus ou menos e False caso a
-diferença seja maior que dois graus""")
+diferença seja maior que dois graus (satisfaz req 4b)""")
 df_sbrj["dif_temp_orvalho"] = dif_temperatura_orvalho
 cat_pode_chover = pd.cut(df_sbrj["dif_temp_orvalho"], 
        bins=[0, 2, df_sbrj["dif_temp_orvalho"].max()],
@@ -47,7 +47,7 @@ df_sbrj["pode_chover"] = cat_pode_chover
 print(df_sbrj)
 
 print("""2.d) Crie a coluna nivel_visibilidade usando as categorias muito baixo, baixo, 
-médio, alto. Use a função pd.cut com intervalos igualmente espaçados""")
+médio, alto. Use a função pd.cut com intervalos igualmente espaçados (satisfaz req 4a)""")
 cat_nivel_visibilidade = pd.cut(df_sbrj["visibility"], 
        bins=4,
        labels=["Muito baixo", "Baixo", "Médio", "Alto"])
@@ -96,6 +96,17 @@ ax2.set_ylabel("Velocidade Média do Vento (km/h)", color='g')
 ax2.tick_params(axis='y', labelcolor='g')
 
 fig.tight_layout()
-plt.show()
+#plt.show()
+
+print("\n-----------------------------------------------------")
+print("4) Medidas de frequência")
+print("""4.a) Mostre as medidas de frequência da coluna nivel_visibilidade 
+(satisfaz req 6)""")
+print(df_sbrj["nivel_visibilidade"].value_counts())
+
+print("""4.a) Quando porcento do tempo a diferença entre a temperatura e ponto de
+orvalho ficou com 2 graus ou menos
+(satisfaz req 6)""")
+print(df_sbrj["pode_chover"].value_counts(normalize=True))
 
 
