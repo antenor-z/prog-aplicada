@@ -92,12 +92,15 @@ de funcionamento do aeroporto (de 6h às 22h30)?
 5. Qual a temperatura média, velocidade do vento média e tipos de nuvens dentro 
 de cada nível de atraso?
 Atraso  Nível
--------------------
+
+```
 = 0     Nenhum
 < 10    Baixo
 < 30    Médio
 < 60    Alto
 >= 60   Muito alto
+```
+
 - Requisitos atendidos: tabelas de frequências com extremos de cada faixa (6b)
 cruzamento estruturado (9b)
 
