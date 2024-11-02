@@ -46,7 +46,15 @@ cat_pode_chover = pd.cut(df_sbrj["dif_temp_orvalho"],
 df_sbrj["pode_chover"] = cat_pode_chover
 print(df_sbrj)
 
-print("""2.e) Para temperatura, vento e visibilidade, mostre o mínimo, max, média,
+print("""2.d) Crie a coluna nivel_visibilidade usando as categorias muito baixo, baixo, 
+médio, alto. Use a função pd.cut com intervalos igualmente espaçados""")
+cat_nivel_visibilidade = pd.cut(df_sbrj["visibility"], 
+       bins=4,
+       labels=["Muito baixo", "Baixo", "Médio", "Alto"])
+df_sbrj["nivel_visibilidade"] = cat_nivel_visibilidade
+print(df_sbrj)
+
+print("""2.f) Para temperatura, vento e visibilidade, mostre o mínimo, max, média,
        variância. Coloque nas linhas dos dados e nas colunas as métricas (satisfaz req 8a)""")
 print(df_sbrj.agg(
     {"temperature": ["min", "max", "mean", "var"], 
@@ -54,7 +62,7 @@ print(df_sbrj.agg(
      "visibility": ["min", "max", "mean", "var"],
      }).transpose())
 
-print("""2.f) Agrupe os timestamps por dia e exiba as mesmas estatísticas
+print("""2.g) Agrupe os timestamps por dia e exiba as mesmas estatísticas
       do exercício anterior. (satisfaz req 8b)""")
 
 df_sbrj["dia"] = pd.to_datetime(df_sbrj["timestamp"]).dt.date
@@ -65,7 +73,7 @@ df_diario = df_sbrj.groupby("dia").agg(
 )
 print(df_diario)
 
-print("""2.g) Qual foi o dia mais quente e o mais frio? Considere a temperatura média do dia.""")
+print("""2.h) Qual foi o dia mais quente e o mais frio? Considere a temperatura média do dia.""")
 print(df_diario["temperature"]["mean"].idxmax(), "com temperatura de", df_diario["temperature"]["mean"].max())
 print(df_diario["temperature"]["mean"].idxmin(), "com temperatura de", df_diario["temperature"]["mean"].min())
 
