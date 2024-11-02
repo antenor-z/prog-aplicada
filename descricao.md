@@ -64,3 +64,44 @@ UTC;
 - flight_number: Número único do voo designado pela companhia aérea (ex.: 1111);
 - flight_iata: Código IATA completo do voo, formado pelo código da companhia e o número do voo (ex.: LA1234);
 - flight_icao: Código ICAO completo do voo, formado pelo código ICAO da companhia e o número do voo (ex.: TAM1234).
+
+# Perguntas respondidas
+
+A concatenação (1) é satisfeita ao juntar as bases de chegadas e partidas de
+diferentes dias.
+
+1. Qual foi a maior, menor e média da temperatura e velocidade do vento? Faça o 
+mesmo, mas agrupando por dia. Faça o mesmo, mas agrupando por dia e por hora 
+(agrupador múltiplo).
+- Requisitos atendidos: 8a, 8b e 8c (medidas de sumarização)
+- Objetivo: Ter uma visão geral das condições climáticas do aeroporto
+em vários níveis de detalhamento: geral, por dia e por hora.
+
+2. Existe relação entre a temperatura, velocidade do vento?
+- Requisitos atendidos: Categorização (4), valores ausentes (2), apply(3), 
+gráfico barra(7)
+- Objetivo: Analisar se existe correlação entre os fenômenos metereológicos
+
+3. Qual a distribuição de tipos nuvens por temperatura?
+- Requisitos atendidos: apply(3), cruzamento simples(9a)
+
+4. Qual a frequência de cada nível de temperatura?
+- Requisitos atendidos: Categorização (4a), gráfico pizza(7)
+
+5. Qual a temperatura média, velocidade do vento média e tipos de nuvens dentro 
+de cada nível de atraso?
+Atraso  Nível
+-------------------
+= 0     Nenhum
+< 10    Baixo
+< 30    Médio
+< 60    Alto
+>= 60   Muito alto
+- Requisitos atendidos: tabelas de frequências com extremos de cada faixa (6b)
+cruzamento estruturado (9b)
+
+6. Compare a variância da temperatura e vento médio por hora do Santos Dumont com
+o de Congonhas. Compare a variância da média de atrasos por hora do Santos Dumont
+com o de Congonhas.
+
+
