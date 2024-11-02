@@ -77,15 +77,16 @@ mesmo, mas agrupando por dia. Faça o mesmo, mas agrupando por dia e por hora
 - Objetivo: Ter uma visão geral das condições climáticas do aeroporto
 em vários níveis de detalhamento: geral, por dia e por hora.
 
-2. Existe relação entre a temperatura, velocidade do vento?
+2. Qual a distribuição de tipos nuvens por temperatura?
+- Requisitos atendidos: apply(3), cruzamento simples(9a)
+
+3. Existe relação entre a temperatura, velocidade do vento?
 - Requisitos atendidos: Categorização (4), valores ausentes (2), apply(3), 
 gráfico barra(7)
 - Objetivo: Analisar se existe correlação entre os fenômenos metereológicos
 
-3. Qual a distribuição de tipos nuvens por temperatura?
-- Requisitos atendidos: apply(3), cruzamento simples(9a)
 
-4. Qual a frequência de cada nível de temperatura?
+4. Qual a frequência percentual de cada nível de temperatura?
 - Requisitos atendidos: Categorização (4a), gráfico pizza(7)
 
 5. Qual a temperatura média, velocidade do vento média e tipos de nuvens dentro 
