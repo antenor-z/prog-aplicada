@@ -36,8 +36,15 @@ print("Quanto maior a diferença menos chance de chuva.")
 dif_temperatura_orvalho = abs(df_sbrj["temperature"] - df_sbrj["dew_point"])
 print(dif_temperatura_orvalho.max())
 
-print("2.d) Crie a coluna dif_temp_orvalho com esta diferença")
+print("""2.d) Crie a coluna dif_temp_orvalho com esta diferença e exiba uma categorização
+'pode chover' com True se a diferença for dois graus ou menos e False caso a
+diferença seja maior que dois graus""")
 df_sbrj["dif_temp_orvalho"] = dif_temperatura_orvalho
+cat_pode_chover = pd.cut(df_sbrj["dif_temp_orvalho"], 
+       bins=[0, 2, df_sbrj["dif_temp_orvalho"].max()],
+       labels=["True", "False"])
+df_sbrj["pode_chover"] = cat_pode_chover
+print(df_sbrj)
 
 print("""2.e) Para temperatura, vento e visibilidade, mostre o mínimo, max, média,
        variância. Coloque nas linhas dos dados e nas colunas as métricas (satisfaz req 8a)""")
