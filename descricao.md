@@ -81,13 +81,13 @@ em vários níveis de detalhamento: geral, por dia e por hora.
 - Requisitos atendidos: apply(3), cruzamento simples(9a)
 
 3. Existe relação entre a temperatura, velocidade do vento?
-- Requisitos atendidos: Categorização (4), valores ausentes (2), apply(3), 
+- Requisitos atendidos: Categorização (4a), valores ausentes (2), apply(3), 
 gráfico barra(7)
 - Objetivo: Analisar se existe correlação entre os fenômenos metereológicos
 
-
-4. Qual a frequência percentual de cada nível de temperatura?
-- Requisitos atendidos: Categorização (4a), gráfico pizza(7)
+4. Qual a frequência percentual de cada nível de temperatura durante o horário
+de funcionamento do aeroporto (de 6h às 22h30)?
+- Requisitos atendidos: Categorização (4b), gráfico pizza(7)
 
 5. Qual a temperatura média, velocidade do vento média e tipos de nuvens dentro 
 de cada nível de atraso?
