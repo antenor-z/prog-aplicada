@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import matplotlib.pyplot as plt
 
 df_sbrj: pd.DataFrame = pd.read_excel("dataset_SBRJ.xlsx")
@@ -39,10 +40,31 @@ def altitude_menor_10000(value):
         return value < 10000
     return False
 
-filtro_few = df_sbrj['clouds_few'].apply(altitude_menor_10000)
-filtro_scattered = df_sbrj['clouds_scattered'].apply(altitude_menor_10000)
-fitro_broken = df_sbrj['clouds_broken'].apply(altitude_menor_10000)
-fitro_overcast = df_sbrj['clouds_overcast'].apply(altitude_menor_10000)
 
-print(fitro_overcast)
+df_sbrj['filtro_few'] = df_sbrj['clouds_few'].apply(altitude_menor_10000)
+df_sbrj['filtro_scattered'] = df_sbrj['clouds_scattered'].apply(altitude_menor_10000)
+df_sbrj['filtro_broken'] = df_sbrj['clouds_broken'].apply(altitude_menor_10000)
+df_sbrj['filtro_overcast'] = df_sbrj['clouds_overcast'].apply(altitude_menor_10000)
+
+def nivel_nuvem(row):
+    if row['filtro_overcast']:
+        return 4
+    elif row['filtro_broken']:
+        return 3
+    elif row['filtro_scattered']:
+        return 2
+    elif row['filtro_few']:
+        return 1
+    return np.nan
+
+df_sbrj['nivel_nuvem'] = df_sbrj.apply(nivel_nuvem, axis=1)
+
+df_sbrj = df_sbrj.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
+print(df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"})
+      .replace(
+        {4: "overcast",
+         3: "broken",
+         2: "scattered",
+         1: "few"}))
+
 
