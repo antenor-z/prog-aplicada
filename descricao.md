@@ -80,7 +80,8 @@ Crie uma coluna pior_tipo_nuvem com o valor do tipo de nuvem mais encoberto
 seguindo a ordem few < scatered < broken < overcast. Para garantir que as nuvens 
 realmente afetam o aeroporto, considere APENAS nuvens abaixo de 10 mil pés.
 
-Qual o pior (mais fechado) tipo de formação para cada valor de temperatura?
+Qual o mais nebuloso (mais fechado) tipo de formação para cada valor de temperatura?
+Parece haver relação entre a nebulosidade e a temperatura?
 
 3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
 para km/h. Crie as seguintes categorias para a velocidade do vento:
