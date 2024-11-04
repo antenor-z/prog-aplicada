@@ -67,45 +67,72 @@ UTC;
 
 # Perguntas respondidas
 
-A concatenação (1) é satisfeita ao juntar as bases de chegadas e partidas de
-diferentes dias.
+1. Quanto os valores de vento não aparecem, significa que não há vento. Complete 
+os valores ausentes de velocidade do vento com zero e os valores ausentes de 
+direção com zero. Quando ocorreu o vento mais forte, qual foi a velocidade?
 
-1. Qual foi a maior, menor e média da temperatura e velocidade do vento? Faça o 
-mesmo, mas agrupando por dia. Faça o mesmo, mas agrupando por dia e por hora 
-(agrupador múltiplo).
-- Requisitos atendidos: 8a, 8b e 8c (medidas de sumarização)
-- Objetivo: Ter uma visão geral das condições climáticas do aeroporto
-em vários níveis de detalhamento: geral, por dia e por hora.
+2. Os valores de nuvens few (poucas), scatered (espalhadas), broken (muitas) e 
+overcast (encoberto) são listas de números separados por vírgula com a altitude 
+de cada nuvem. Por exemplo, few com valor "10000,12000" indicam poucas nuvens em 
+10 mil pés e 12 mil pés.
 
-2. Qual a distribuição de tipos nuvens por temperatura?
-- Requisitos atendidos: apply(3), cruzamento simples(9a)
+Crie uma coluna pior_tipo_nuvem com o valor do tipo de nuvem mais encoberto 
+seguindo a ordem few < scatered < broken < overcast. Para garantir que as nuvens 
+realmente afetam o aeroporto, considere APENAS nuvens abaixo de 10 mil pés.
 
-3. Existe relação entre a temperatura, velocidade do vento?
-- Requisitos atendidos: Categorização (4a), valores ausentes (2), apply(3), 
-gráfico barra(7)
-- Objetivo: Analisar se existe correlação entre os fenômenos metereológicos
+Qual o pior (mais fechado) tipo de formação para cada valor de temperatura?
 
-4. Qual a frequência percentual de cada nível de temperatura durante o horário
-de funcionamento do aeroporto (de 6h às 22h30)?
-- Requisitos atendidos: Categorização (4b), gráfico pizza(7)
+3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
+para km/h. Crie as seguintes categorias para a velocidade do vento:
 
-5. Qual a temperatura média, velocidade do vento média e tipos de nuvens dentro 
-de cada nível de atraso?
-Atraso  Nível
+    * **Calmo:** Menor ou igual à 2km/h
+    * **Bafagem:** 2 à 5 km/h
+    * **Brisa leve:** 6 a 11km/h
+    * **Brisa fraca:** 12 a 19km/h
+    * **Brisa moderada:** 20 a 28km/h
+    * **Brisa forte:** 29 a 38km/h
+    * **Vento fresco:** 39 a 49km/h
+    * **Vento forte:** 50 a 61km/h
+    * **Ventania:** 62 a 74km/h
+    * **Ventania forte:** 75 a 88km/h
+    * **Tempestade:** 89 a 102km/h
+    * **Tempestade** violenta: 103 a 117km/h
+    * **Furacao:** Maior que 118km/h
+
+Está é a chamada de Escala de Beaufort.
+
+3.1. Faça uma tabela de frequências destas categorias e mostre em um gráfico pizza.
+Qual é o tipo de vento mais presente?
+
+3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
+valores de temperatura.
+
+3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
+padrão. Parece haver relação entre velocidade do vento e temperatura?
+
+4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
+chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os 
+timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada 
+hora, teremos o tempo médio de atraso. Faça o mesmo para as partidas criando o 
+dataframe atraso-partidas-SBRJ.
+
+```                 
+                         _
+2024-10-29-SBGL-arrivals  |
+2024-10-30-SBGL-arrivals  | ----> chegadas_SBRJ -----> atraso_chegadas_SBRJ
+...                       |
+2024-11-05-SBGL-arrivals _|
 
 ```
-= 0     Nenhum
-< 10    Baixo
-< 30    Médio
-< 60    Alto
->= 60   Muito alto
-```
 
-- Requisitos atendidos: tabelas de frequências com extremos de cada faixa (6b)
-cruzamento estruturado (9b)
+Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
+colunas atraso_chegada e atraso_partida.
 
-6. Compare a variância da temperatura e vento médio por hora do Santos Dumont com
-o de Congonhas. Compare a variância da média de atrasos por hora do Santos Dumont
-com o de Congonhas.
+Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
+a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
+uma correlação?
+
+5. Para um aeroporto é interessante com o vento fique o mais paralelo possível 
+com a direção da pista. Isto facilita os pousos e decolagens. 
 
 
