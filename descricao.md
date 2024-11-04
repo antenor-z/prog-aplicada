@@ -69,7 +69,7 @@ UTC;
 
 1. Quanto os valores de vento não aparecem, significa que não há vento. Complete 
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
-direção com zero. Quando ocorreu o vento mais forte, qual foi a velocidade?
+direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
 
 2. Os valores de nuvens few (poucas), scatered (espalhadas), broken (muitas) e 
 overcast (encoberto) são listas de números separados por vírgula com a altitude 
