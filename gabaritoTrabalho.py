@@ -69,3 +69,52 @@ print(df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"})
          1: "few"}))
 
 
+print("""
+3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
+para km/h. Crie as seguintes categorias para a velocidade do vento:
+
+    * **Calmo:** Menor ou igual à 2km/h
+    * **Bafagem:** 2 à 5 km/h
+    * **Brisa leve:** 6 a 11km/h
+    * **Brisa fraca:** 12 a 19km/h
+    * **Brisa moderada:** 20 a 28km/h
+    * **Brisa forte:** 29 a 38km/h
+    * **Vento fresco:** 39 a 49km/h
+    * **Vento forte:** 50 a 61km/h
+    * **Ventania:** 62 a 74km/h
+    * **Ventania forte:** 75 a 88km/h
+    * **Tempestade:** 89 a 102km/h
+    * **Tempestade violenta**: 103 a 117km/h
+    * **Furacao:** Maior que 118km/h
+
+Está é a chamada de Escala de Beaufort.
+
+3.1. Faça uma tabela de frequências destas categorias e mostre em um gráfico pizza.
+Qual é o tipo de vento mais presente?
+
+3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
+valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
+
+3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
+padrão. Parece haver relação entre velocidade do vento e temperatura?
+""")
+
+
+df_sbrj["cat_vento"] = pd.cut(
+    df_sbrj.wind_speed, 
+    bins=[0, 2, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117, 9999],
+    labels=["Calmo", "Bafagem", "Brisa leve", "Brisa fraca", "Brisa Moderada",
+            "Brisa forte", "Vento fresco", "Vento forte", "Ventania", "Ventania fote",
+            "Tempestade", "Tempestade violenta", "Furacao"],
+    include_lowest=True
+)
+
+df_sbrj["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
+plt.title("Distribuição das Categorias de Vento")
+plt.savefig("pie_chart.png")
+
+print(pd.crosstab(df_sbrj["cat_vento"], df_sbrj["temperature"]).transpose())
+
+print(df_sbrj.groupby("cat_vento", observed=True)
+      .agg({"temperature": ["min", "max", "mean", "std"]}).
+      dropna())

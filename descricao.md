@@ -106,7 +106,7 @@ Está é a chamada de Escala de Beaufort.
 Qual é o tipo de vento mais presente?
 
 3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
-valores de temperatura.
+valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
 
 3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
 padrão. Parece haver relação entre velocidade do vento e temperatura?
