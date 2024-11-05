@@ -99,7 +99,10 @@ valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
 padrão. Parece haver relação entre velocidade do vento e temperatura?
 """)
 
+def to_kmh(wind):
+    return wind * 1.852
 
+df_sbrj["wind_speed"].apply(to_kmh)
 df_sbrj["cat_vento"] = pd.cut(
     df_sbrj.wind_speed, 
     bins=[0, 2, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117, 9999],
