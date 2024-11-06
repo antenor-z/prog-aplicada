@@ -11,11 +11,10 @@ SBRJ que será usado ao longo do trabalho para se referir a este aeroporto.
 
 # Bases de dados
 
-## Base: dataset_SBRJ.xlsx
+## Base: Tempo
 
-Possui as informações históricas metereológicas. É obtido acessando o endereço:
-"https://aero.a4barros.com/history/SBRJ/" e clicando na opção "Baixar como 
-planilha".
+Possui as informações históricas metereológicas. É obtido acessando no endereço:
+http://a4barros.com/public/prog-aplicada/tempo.zip
 
 ### Descrição de colunas
 
@@ -29,9 +28,10 @@ nuvens few (1/8 a 2/8 do céu) presentes;
 - clouds_broken: O mesmo, mas para nuvens broken (5/8 a 7/8 do céu);
 - clouds_overcast: O mesmo, mas para nuvens overcast (encoberto).
 
-## Base: 2024-10-29-SBRJ-arrivals.xlsx e 2024-10-29-SBRJ-departures.xlsx
+## Base: Voos
 
-Contém dados de pousos e decolagens do SBRJ. 
+Contém dados de pousos e decolagens em vários aeroportos do sudeste.
+Pode ser obtida em http://a4barros.com/public/prog-aplicada/voos.zip
 
 ### Descrição de colunas
 
