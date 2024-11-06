@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 
 df_sbrj: pd.DataFrame = pd.read_excel("dataset_SBRJ.xlsx")
@@ -121,3 +122,69 @@ print(pd.crosstab(df_sbrj["cat_vento"], df_sbrj["temperature"]).transpose())
 print(df_sbrj.groupby("cat_vento", observed=True)
       .agg({"temperature": ["min", "max", "mean", "std"]}).
       dropna())
+
+print(
+"""
+4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
+chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os 
+timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada 
+hora, teremos o tempo médio de atraso. Faça o mesmo para as partidas criando o 
+dataframe atraso-partidas-SBRJ.
+
+```                 
+                         _
+2024-10-29-SBGL-arrivals  |
+2024-10-30-SBGL-arrivals  | ----> chegadas_SBRJ -----> atraso_chegadas_SBRJ
+...                       |
+2024-11-05-SBGL-arrivals _|
+
+```
+
+Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
+colunas atraso_chegada e atraso_partida.
+
+Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
+a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
+uma correlação?
+"""
+)
+
+sbrj_partidas = pd.DataFrame()
+sbrj_chegadas = pd.DataFrame()
+
+# Abrindo os datasets do Santos Dumont e concatenando em chegadas
+# e partidas
+for arquivo in os.listdir("voos"):
+    if "SBRJ" in arquivo:
+        if "departures" in arquivo:
+            partidas_do_dia = pd.read_excel("voos/" + arquivo)
+            sbrj_partidas = pd.concat([sbrj_partidas, partidas_do_dia])
+        elif "arrivals" in arquivo:
+            chegadas_do_dia = pd.read_excel("voos/" + arquivo)
+            sbrj_chegadas = pd.concat([sbrj_chegadas, chegadas_do_dia])
+
+sbrj_partidas = sbrj_partidas[["departure_scheduled", "flight_icao", "departure_delay"]]
+sbrj_chegadas = sbrj_chegadas[["arrival_scheduled", "flight_icao", "arrival_delay"]]
+sbrj_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
+sbrj_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
+
+sbrj_chegadas["atraso_chegada"] = (sbrj_chegadas["atraso_chegada"]
+.fillna(sbrj_chegadas["atraso_chegada"].mean()))
+
+sbrj_partidas["atraso_partida"] = (sbrj_partidas["atraso_partida"]
+.fillna(sbrj_partidas["atraso_partida"].mean()))
+
+
+sbrj_partidas["timestamp"] = pd.to_datetime(sbrj_partidas.timestamp)
+sbrj_chegadas["timestamp"] = pd.to_datetime(sbrj_chegadas.timestamp)
+sbrj_partidas.set_index("timestamp", inplace=True)
+sbrj_chegadas.set_index("timestamp", inplace=True)
+
+# Setando o índice para ter apenas a hora cheia
+sbrj_partidas.index = sbrj_partidas.index.floor('H')
+sbrj_chegadas.index = sbrj_chegadas.index.floor('H')
+
+sbrj_partidas = sbrj_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
+sbrj_partidas.sort_index()
+
+print(sbrj_partidas)
