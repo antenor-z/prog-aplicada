@@ -133,7 +133,7 @@ Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
 a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
 uma correlação?
 
-5. Para um aeroporto é interessante com o vento fique o mais paralelo possível 
-com a direção da pista. Isto facilita os pousos e decolagens. 
-
+5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
+que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
+100% de chance de chuva. Verifique se esta diferença tem influência nos atrasos.
 

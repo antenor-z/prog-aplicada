@@ -205,3 +205,12 @@ print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_partida).transpose())
 print("----- Crosstab categoria do vento x atraso chegada -----")
 print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_chegada).transpose())
 
+print("""
+5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
+que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
+100% de chance de chuva. Verifique se esta diferença tem influência nos atrasos.
+""")
+
+diff_temp = df_sbrj["temperature"] - df_sbrj["dew_point"]
+
+print(pd.crosstab(diff_temp, [df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]]))
