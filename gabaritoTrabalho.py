@@ -62,12 +62,13 @@ def nivel_nuvem(row):
 df_sbrj['nivel_nuvem'] = df_sbrj.apply(nivel_nuvem, axis=1)
 
 df_sbrj = df_sbrj.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
-print(df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"})
-      .replace(
-        {4: "overcast",
-         3: "broken",
-         2: "scattered",
-         1: "few"}))
+df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
+    {4: "overcast",
+     3: "broken",
+     2: "scattered",
+     1: "few"}, inplace=True)
+
+print(df_sbrj)
 
 
 print("""
@@ -190,6 +191,17 @@ sbrj_partidas.sort_index()
 
 df_sbrj = df_sbrj.merge(sbrj_partidas, how="inner", on="timestamp")
 df_sbrj = df_sbrj.merge(sbrj_chegadas, how="inner", on="timestamp")
-print(pd.crosstab(df_sbrj["nivel_nuvem"], df_sbrj["atraso_partida"]).transpose())
-print(pd.crosstab(df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]).transpose())
+
+cat_atraso_partida = pd.cut(df_sbrj["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
+cat_atraso_chegada = pd.cut(df_sbrj["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
+
+print("----- Crosstab nível de nuvem x atraso partida -----")
+print(pd.crosstab(df_sbrj["nivel_nuvem"], cat_atraso_partida).transpose())
+print("----- Crosstab nível de nuvem x atraso chegada -----")
+print(pd.crosstab(df_sbrj["nivel_nuvem"], cat_atraso_chegada).transpose())
+
+print("----- Crosstab categoria do vento x atraso partida -----")
+print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_partida).transpose())
+print("----- Crosstab categoria do vento x atraso chegada -----")
+print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_chegada).transpose())
 
