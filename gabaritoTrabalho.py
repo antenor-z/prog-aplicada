@@ -13,7 +13,7 @@ os valores ausentes de velocidade do vento com zero e os valores ausentes de
 direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
 """)
 
-df_sbrj.timestamp = pd.to_datetime(df_sbrj.timestamp)
+df_sbrj.timestamp = pd.to_datetime(df_sbrj.timestamp, utc=True)
 df_sbrj.set_index("timestamp", inplace=True)
 df_sbrj.fillna({"wind_direction": 0, "wind_speed": 0}, inplace=True)
 print(df_sbrj.sort_values("wind_speed", ascending=False).head(20))
@@ -144,8 +144,9 @@ Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as
 colunas atraso_chegada e atraso_partida.
 
 Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
-a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
-uma correlação?
+a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Faça 
+partidas e chegadas separadamente. Parece haver uma correlação maior nas
+partidas ou nas chegadas?
 """
 )
 
@@ -175,16 +176,20 @@ sbrj_partidas["atraso_partida"] = (sbrj_partidas["atraso_partida"]
 .fillna(sbrj_partidas["atraso_partida"].mean()))
 
 
-sbrj_partidas["timestamp"] = pd.to_datetime(sbrj_partidas.timestamp)
-sbrj_chegadas["timestamp"] = pd.to_datetime(sbrj_chegadas.timestamp)
+sbrj_partidas["timestamp"] = pd.to_datetime(sbrj_partidas.timestamp, utc=True)
+sbrj_chegadas["timestamp"] = pd.to_datetime(sbrj_chegadas.timestamp, utc=True)
 sbrj_partidas.set_index("timestamp", inplace=True)
 sbrj_chegadas.set_index("timestamp", inplace=True)
 
 # Setando o índice para ter apenas a hora cheia
-sbrj_partidas.index = sbrj_partidas.index.floor('H')
-sbrj_chegadas.index = sbrj_chegadas.index.floor('H')
+sbrj_partidas.index = sbrj_partidas.index.floor('h')
+sbrj_chegadas.index = sbrj_chegadas.index.floor('h')
 
 sbrj_partidas = sbrj_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
 sbrj_partidas.sort_index()
 
-print(sbrj_partidas)
+df_sbrj = df_sbrj.merge(sbrj_partidas, how="inner", on="timestamp")
+df_sbrj = df_sbrj.merge(sbrj_chegadas, how="inner", on="timestamp")
+print(pd.crosstab(df_sbrj["nivel_nuvem"], df_sbrj["atraso_partida"]).transpose())
+print(pd.crosstab(df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]).transpose())
+
