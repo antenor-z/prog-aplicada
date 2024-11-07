@@ -157,9 +157,7 @@ Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as
 colunas atraso_chegada e atraso_partida.
 
 Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
-a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Faça 
-partidas e chegadas separadamente. Parece haver uma correlação maior nas
-partidas ou nas chegadas?
+a pior formação de nuvens e os atrasos. Parece haver uma correlação?
 """
 )
 

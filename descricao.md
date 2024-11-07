@@ -150,8 +150,7 @@ Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as
 colunas atraso_chegada e atraso_partida.
 
 Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
-a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
-uma correlação?
+a pior formação de nuvens e os atrasos. Parece haver uma correlação?
 
 * Objetivo: Verificar a possível relação entre a piora das condições de tempo com
 atrasos de voo.
@@ -163,6 +162,9 @@ atrasos de voo.
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 100% de chance de chuva. Retire valores maiores de 10 graus. Verifique se esta 
 diferença tem influência nos atrasos para cada tipo de nuvem.
+      
+Repita o procedimento, mas considerando apenas condições muito adversas de tempo.
+Visibilidade menor que 5000 e nuvens encobertas.
 
 * Objetivo: Criar uma medida proporcional a chance a chuva e verificar se esta 
 medida influencia nos atrasos.
