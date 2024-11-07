@@ -67,9 +67,14 @@ UTC;
 
 # Perguntas respondidas
 
-1. Quanto os valores de vento não aparecem, significa que não há vento. Complete 
+1. Quando os valores de vento não aparecem, significa que não há vento. Complete 
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
 direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
+
+Objetivos: Preparar a coluna de vento para posterior análise. Ter uma ideia
+dos extremos de vento.
+
+Requisitos atendidos: 2 (preenchimento de valores ausentes)
 
 2. Os valores de nuvens few (poucas), scatered (espalhadas), broken (muitas) e 
 overcast (encoberto) são listas de números separados por vírgula com a altitude 
@@ -82,6 +87,13 @@ realmente afetam o aeroporto, considere APENAS nuvens abaixo de 10 mil pés.
 
 Qual o mais nebuloso (mais fechado) tipo de formação para cada valor de temperatura?
 Parece haver relação entre a nebulosidade e a temperatura?
+
+Objetivo: Filtrar os dados de nuvem para os que podem influenciar o aeroporto.
+Juntar dados de nuvem que estavam espalhados em quatro colunas em apenas uma
+coluna com o tipo de nuvem mais crítico.
+
+Requisitos atendidos: 3 (apply)
+
 
 3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
 para km/h. Crie as seguintes categorias para a velocidade do vento:
@@ -111,6 +123,13 @@ valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
 3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
 padrão. Parece haver relação entre velocidade do vento e temperatura?
 
+Objetivo: Discretizar as velocidades de vento em categorias comumente usadas
+na metereologia e verificar a existencia de relação entre as categorias de vento
+e a temperatura.
+
+Requisitos atendidos: 4 (categorização com pd.cut), 3 (apply), 9 (cruzamento
+simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza)
+
 4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
 chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os 
 timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada 
@@ -133,7 +152,18 @@ Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
 a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
 uma correlação?
 
+Objetivo: Verificar a possível relação entre a piora das condições de tempo com
+atrasos de voo.
+
+Requisitos atendidos: 1 (Concatenação), 2 (preenchimento de valores ausentes),
+4 (categorização com pd.cut), 9 (cruzamento simples)
+
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
-100% de chance de chuva. Verifique se esta diferença tem influência nos atrasos.
+100% de chance de chuva. Retire valores maiores de 10 graus. Verifique se esta 
+diferença tem influência nos atrasos para cada tipo de nuvem.
 
+Objetivo: Criar uma medida proporcional a chance a chuva e verificar se esta 
+medida influencia nos atrasos.
+
+Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)

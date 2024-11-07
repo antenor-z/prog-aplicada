@@ -8,7 +8,7 @@ df_sbrj: pd.DataFrame = pd.read_excel("dataset_SBRJ.xlsx")
 
 print("\n----------------------------------------------------------------------")
 print("""
-1. Quanto os valores de vento não aparecem, significa que não há vento. Complete 
+1. Quando os valores de vento não aparecem, significa que não há vento. Complete 
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
 direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
 """)
@@ -62,12 +62,26 @@ def nivel_nuvem(row):
 df_sbrj['nivel_nuvem'] = df_sbrj.apply(nivel_nuvem, axis=1)
 
 df_sbrj = df_sbrj.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
-df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
+print("Nível de nuvem por temperatura")
+print(df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
     {4: "overcast",
      3: "broken",
      2: "scattered",
-     1: "few"}, inplace=True)
+     1: "few"}))
 
+# Eu só consigo fazer o replace permanente aqui porque no comando acima eu tenho
+# que pegar o valor máximo. Só consigo fazer isto com números
+df_sbrj["nivel_nuvem"] = df_sbrj["nivel_nuvem"].replace(
+    {4: "overcast",
+     3: "broken",
+     2: "scattered",
+     1: "few"})
+
+print("Tabela de frequencia percentual de tipos de nuvem")
+print(df_sbrj["nivel_nuvem"].value_counts(normalize=True) * 100)
+df_sbrj["nivel_nuvem"].value_counts(normalize=True).plot.bar()
+plt.title("Distribuição das Categorias de Nuvem")
+plt.savefig("Distribuição das Categorias de Nuvem.png")
 print(df_sbrj)
 
 
@@ -101,10 +115,11 @@ valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
 padrão. Parece haver relação entre velocidade do vento e temperatura?
 """)
 
+print("item 3.1")
 def to_kmh(wind):
     return wind * 1.852
 
-df_sbrj["wind_speed"].apply(to_kmh)
+df_sbrj["wind_speed"] = df_sbrj["wind_speed"].apply(to_kmh)
 df_sbrj["cat_vento"] = pd.cut(
     df_sbrj.wind_speed, 
     bins=[0, 2, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117, 9999],
@@ -114,12 +129,17 @@ df_sbrj["cat_vento"] = pd.cut(
     include_lowest=True
 )
 
+print("Item 3.2")
+print("tabela de frequencia numérica de tipos de vento")
+print(df_sbrj["cat_vento"].value_counts())
+
 df_sbrj["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
 plt.title("Distribuição das Categorias de Vento")
-plt.savefig("pie_chart.png")
+plt.savefig("Distribuição das Categorias de Vento.png")
 
 print(pd.crosstab(df_sbrj["cat_vento"], df_sbrj["temperature"]).transpose())
 
+print("Item 3.3")
 print(df_sbrj.groupby("cat_vento", observed=True)
       .agg({"temperature": ["min", "max", "mean", "std"]}).
       dropna())
@@ -170,11 +190,12 @@ sbrj_chegadas = sbrj_chegadas[["arrival_scheduled", "flight_icao", "arrival_dela
 sbrj_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
 sbrj_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
 
+# Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
 sbrj_chegadas["atraso_chegada"] = (sbrj_chegadas["atraso_chegada"]
-.fillna(sbrj_chegadas["atraso_chegada"].mean()))
+.fillna(sbrj_chegadas["atraso_chegada"].median()))
 
 sbrj_partidas["atraso_partida"] = (sbrj_partidas["atraso_partida"]
-.fillna(sbrj_partidas["atraso_partida"].mean()))
+.fillna(sbrj_partidas["atraso_partida"].median()))
 
 
 sbrj_partidas["timestamp"] = pd.to_datetime(sbrj_partidas.timestamp, utc=True)
@@ -208,9 +229,13 @@ print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_chegada).transpose())
 print("""
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
-100% de chance de chuva. Verifique se esta diferença tem influência nos atrasos.
+100% de chance de chuva. Retire valores maiores de 10 graus. Verifique se esta 
+diferença tem influência nos atrasos para cada tipo de nuvem.
 """)
 
-diff_temp = df_sbrj["temperature"] - df_sbrj["dew_point"]
+df_sbrj["diff_temp"] = df_sbrj["temperature"] - df_sbrj["dew_point"]
 
-print(pd.crosstab(diff_temp, [df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]]))
+filtro_maior_10 = df_sbrj["diff_temp"] <= 10
+df_sbrj = df_sbrj[filtro_maior_10]
+
+print(pd.crosstab(df_sbrj["diff_temp"] , [df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]]))
