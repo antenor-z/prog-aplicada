@@ -19,14 +19,14 @@ Dumont (com código ICAO SBRJ), Galeão (SBGL), Congonhas (SBSP) e Guarulhos (SB
 
 ## Base: Tempo
 
-Possui as informações históricas metereológicas de alguns aeroportos. É obtido 
+Possui as informações históricas meteorológicas de alguns aeroportos. É obtido 
 acessando o endereço:
 https://a4barros.com/public/prog-aplicada/tempo.zip
 
 ### Descrição de colunas
 
 - wind_direction: Direção **de onde** o ventos sopra em graus;
-- wind_speed: Velocidade do vento em nós (milhas nauticas por hora);
+- wind_speed: Velocidade do vento em nós (milhas náuticas por hora);
 - temperature: Temperatura em graus Célsius;
 - dew_point: Ponto de orvalho em graus Célsius;
 - qnh: Referência para o altímetro;
@@ -122,19 +122,19 @@ para km/h. Crie as seguintes categorias para a velocidade do vento:
     * **Tempestade** violenta: 103 a 117km/h
     * **Furacao:** Maior que 118km/h
 
-Está é a chamada de Escala de Beaufort.
+Esta é chamada de Escala de Beaufort.
 
 3.1. Faça uma tabela de frequências destas categorias e mostre em um gráfico pizza.
 Qual é o tipo de vento mais presente?
 
 3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
-valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
+valores de temperatura. Em qual faixa de temperatura ocorrem mais ventos?
 
 3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
 padrão. Parece haver relação entre velocidade do vento e temperatura?
 
 * Objetivo: Discretizar as velocidades de vento em categorias comumente usadas
-na metereologia e verificar a existencia de relação entre as categorias de vento
+na meteorologia e verificar a existência de relação entre as categorias de vento
 e a temperatura.
 
 * Requisitos atendidos: 4 (categorização com pd.cut), 3 (apply), 9 (cruzamento
