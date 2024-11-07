@@ -119,7 +119,7 @@ para km/h. Crie as seguintes categorias para a velocidade do vento:
     * **Ventania:** 62 a 74km/h
     * **Ventania forte:** 75 a 88km/h
     * **Tempestade:** 89 a 102km/h
-    * **Tempestade** violenta: 103 a 117km/h
+    * **Tempestade violenta**: 103 a 117km/h
     * **Furacao:** Maior que 118km/h
 
 Esta é chamada de Escala de Beaufort.

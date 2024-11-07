@@ -104,13 +104,13 @@ para km/h. Crie as seguintes categorias para a velocidade do vento:
     * **Tempestade violenta**: 103 a 117km/h
     * **Furacao:** Maior que 118km/h
 
-Está é a chamada de Escala de Beaufort.
+Esta é chamada de Escala de Beaufort.
 
 3.1. Faça uma tabela de frequências destas categorias e mostre em um gráfico pizza.
 Qual é o tipo de vento mais presente?
 
 3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
-valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
+valores de temperatura. Em qual faixa de temperatura ocorrem mais ventos?
 
 3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
 padrão. Parece haver relação entre velocidade do vento e temperatura?
