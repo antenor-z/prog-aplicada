@@ -1,20 +1,27 @@
+# PROGRAMAÇÃO APLICADA
+
+## Trabalho 2
+Antenor Barros Leal 2011241
+
+-----------
+
 # Resumo
 Este trabalho tem como objetivo mostrar quais condições climáticas mudam os
 horários de voo.
 
-Para responder esta pergunta usamos três dataframes: um com as condições 
-climáticas em um aeroporto, o outro com as partidas deste aeroportos e o último
-com as chegadas de um aeroporto.
+Para responder esta pergunta usamos vários dataframes: um com as condições 
+climáticas em um aeroporto e outros com as partidas e chegadas deste aeroporto.
 
-O aeroporto escolhido será o Santos Dumont. Este aeroporto possui código ICAO
-SBRJ que será usado ao longo do trabalho para se referir a este aeroporto.
+Será feito o mesmo teste em alguns aeroportos do sudeste brasileiro: Santos
+Dumont (com código ICAO SBRJ), Galeão (SBGL), Congonhas (SBSP) e Guarulhos (SBGR).
 
 # Bases de dados
 
 ## Base: Tempo
 
-Possui as informações históricas metereológicas. É obtido acessando no endereço:
-http://a4barros.com/public/prog-aplicada/tempo.zip
+Possui as informações históricas metereológicas de alguns aeroportos. É obtido 
+acessando o endereço:
+https://a4barros.com/public/prog-aplicada/tempo.zip
 
 ### Descrição de colunas
 
@@ -22,16 +29,18 @@ http://a4barros.com/public/prog-aplicada/tempo.zip
 - wind_speed: Velocidade do vento em nós (milhas nauticas por hora);
 - temperature: Temperatura em graus Célsius;
 - dew_point: Ponto de orvalho em graus Célsius;
-- clouds_few: Alturas em pés separadas por virgulas das altitudes que existem
+- qnh: Referência para o altímetro;
+- clouds_few: Alturas em pés separadas por vírgulas das altitudes que existem
 nuvens few (1/8 a 2/8 do céu) presentes;
 - clouds_scattered: O mesmo, mas para nuvens scattered (3/8 a 4/8 do céu);
 - clouds_broken: O mesmo, mas para nuvens broken (5/8 a 7/8 do céu);
-- clouds_overcast: O mesmo, mas para nuvens overcast (encoberto).
+- clouds_overcast: O mesmo, mas para nuvens overcast (encoberto);
+- timestamp: Data e hora destas condições.
 
 ## Base: Voos
 
 Contém dados de pousos e decolagens em vários aeroportos do sudeste.
-Pode ser obtida em http://a4barros.com/public/prog-aplicada/voos.zip
+Pode ser obtida em https://a4barros.com/public/prog-aplicada/voos.zip
 
 ### Descrição de colunas
 
@@ -71,10 +80,10 @@ UTC;
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
 direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
 
-Objetivos: Preparar a coluna de vento para posterior análise. Ter uma ideia
+* Objetivos: Preparar a coluna de vento para posterior análise. Ter uma ideia
 dos extremos de vento.
 
-Requisitos atendidos: 2 (preenchimento de valores ausentes)
+* Requisitos atendidos: 2 (preenchimento de valores ausentes)
 
 2. Os valores de nuvens few (poucas), scatered (espalhadas), broken (muitas) e 
 overcast (encoberto) são listas de números separados por vírgula com a altitude 
@@ -88,11 +97,12 @@ realmente afetam o aeroporto, considere APENAS nuvens abaixo de 10 mil pés.
 Qual o mais nebuloso (mais fechado) tipo de formação para cada valor de temperatura?
 Parece haver relação entre a nebulosidade e a temperatura?
 
-Objetivo: Filtrar os dados de nuvem para os que podem influenciar o aeroporto.
+* Objetivo: Filtrar os dados de nuvem para os que podem influenciar o aeroporto.
 Juntar dados de nuvem que estavam espalhados em quatro colunas em apenas uma
 coluna com o tipo de nuvem mais crítico.
 
-Requisitos atendidos: 3 (apply)
+* Requisitos atendidos: 3 (apply), 8 (medidas de sumarização (grupos simples)),
+7 (gráfico barra)
 
 
 3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
@@ -123,11 +133,11 @@ valores de temperatura. Em qual facha de temperatura ocorrem mais ventos?
 3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
 padrão. Parece haver relação entre velocidade do vento e temperatura?
 
-Objetivo: Discretizar as velocidades de vento em categorias comumente usadas
+* Objetivo: Discretizar as velocidades de vento em categorias comumente usadas
 na metereologia e verificar a existencia de relação entre as categorias de vento
 e a temperatura.
 
-Requisitos atendidos: 4 (categorização com pd.cut), 3 (apply), 9 (cruzamento
+* Requisitos atendidos: 4 (categorização com pd.cut), 3 (apply), 9 (cruzamento
 simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza)
 
 4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
@@ -136,15 +146,6 @@ timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada
 hora, teremos o tempo médio de atraso. Faça o mesmo para as partidas criando o 
 dataframe atraso-partidas-SBRJ.
 
-```                 
-                         _
-2024-10-29-SBGL-arrivals  |
-2024-10-30-SBGL-arrivals  | ----> chegadas_SBRJ -----> atraso_chegadas_SBRJ
-...                       |
-2024-11-05-SBGL-arrivals _|
-
-```
-
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
 
@@ -152,10 +153,10 @@ Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
 a pior formação de nuvens (coluna "pior_tipo_nuvem") e os atrasos. Parece haver
 uma correlação?
 
-Objetivo: Verificar a possível relação entre a piora das condições de tempo com
+* Objetivo: Verificar a possível relação entre a piora das condições de tempo com
 atrasos de voo.
 
-Requisitos atendidos: 1 (Concatenação), 2 (preenchimento de valores ausentes),
+* Requisitos atendidos: 1 (Concatenação), 2 (preenchimento de valores ausentes),
 4 (categorização com pd.cut), 9 (cruzamento simples)
 
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
@@ -163,7 +164,7 @@ que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 100% de chance de chuva. Retire valores maiores de 10 graus. Verifique se esta 
 diferença tem influência nos atrasos para cada tipo de nuvem.
 
-Objetivo: Criar uma medida proporcional a chance a chuva e verificar se esta 
+* Objetivo: Criar uma medida proporcional a chance a chuva e verificar se esta 
 medida influencia nos atrasos.
 
-Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)
+* Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)

@@ -82,6 +82,7 @@ print(df_sbrj["nivel_nuvem"].value_counts(normalize=True) * 100)
 df_sbrj["nivel_nuvem"].value_counts(normalize=True).plot.bar()
 plt.title("Distribuição das Categorias de Nuvem")
 plt.savefig("Distribuição das Categorias de Nuvem.png")
+plt.close()
 print(df_sbrj)
 
 
@@ -129,7 +130,6 @@ df_sbrj["cat_vento"] = pd.cut(
     include_lowest=True
 )
 
-print("Item 3.2")
 print("tabela de frequencia numérica de tipos de vento")
 print(df_sbrj["cat_vento"].value_counts())
 
@@ -137,6 +137,7 @@ df_sbrj["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
 plt.title("Distribuição das Categorias de Vento")
 plt.savefig("Distribuição das Categorias de Vento.png")
 
+print("Item 3.2")
 print(pd.crosstab(df_sbrj["cat_vento"], df_sbrj["temperature"]).transpose())
 
 print("Item 3.3")
@@ -151,15 +152,6 @@ chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os
 timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada 
 hora, teremos o tempo médio de atraso. Faça o mesmo para as partidas criando o 
 dataframe atraso-partidas-SBRJ.
-
-```                 
-                         _
-2024-10-29-SBGL-arrivals  |
-2024-10-30-SBGL-arrivals  | ----> chegadas_SBRJ -----> atraso_chegadas_SBRJ
-...                       |
-2024-11-05-SBGL-arrivals _|
-
-```
 
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
@@ -231,6 +223,9 @@ print("""
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 100% de chance de chuva. Retire valores maiores de 10 graus. Verifique se esta 
 diferença tem influência nos atrasos para cada tipo de nuvem.
+      
+Repita o procedimento, mas considerando apenas condições muito adversas de tempo.
+Visibilidade menor que 5000 e nuvens encobertas.
 """)
 
 df_sbrj["diff_temp"] = df_sbrj["temperature"] - df_sbrj["dew_point"]
@@ -239,3 +234,9 @@ filtro_maior_10 = df_sbrj["diff_temp"] <= 10
 df_sbrj = df_sbrj[filtro_maior_10]
 
 print(pd.crosstab(df_sbrj["diff_temp"] , [df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]]))
+
+print("Calculando para condições muito adversas")
+
+filtro_muito_adverso = (df_sbrj["nivel_nuvem"] == "overcast") & (df_sbrj["visibility"] < 5000)
+df_sbrj_adverso = df_sbrj[filtro_muito_adverso]
+print(pd.crosstab(df_sbrj_adverso["diff_temp"] , [df_sbrj_adverso["nivel_nuvem"], df_sbrj_adverso["atraso_chegada"]]))
