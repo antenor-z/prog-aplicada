@@ -246,3 +246,5 @@ print("Calculando para condições muito adversas")
 filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") & (df_aeroporto["visibility"] < 5000)
 df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
 print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))
+
+print("Atraso médio", aeroporto_escolhido, (df_aeroporto["atraso_chegada"].mean() + df_aeroporto["atraso_partida"].mean()) / 2)
