@@ -3,7 +3,15 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-df_sbrj: pd.DataFrame = pd.read_excel("dataset_SBRJ.xlsx")
+aeroporto_escolhido = "Santos Dumont"
+aeroportos = {
+    "Santos Dumont": "SBRJ",
+    "Galeão": "SBGL",
+    "Congonhas": "SBSP",
+    "Guarulhos": "SBGR",
+}
+ICAO = aeroportos[aeroporto_escolhido]
+df_aeroporto: pd.DataFrame = pd.read_excel(f"dataset_{ICAO}.xlsx")
 
 
 print("\n----------------------------------------------------------------------")
@@ -13,10 +21,10 @@ os valores ausentes de velocidade do vento com zero e os valores ausentes de
 direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
 """)
 
-df_sbrj.timestamp = pd.to_datetime(df_sbrj.timestamp, utc=True)
-df_sbrj.set_index("timestamp", inplace=True)
-df_sbrj.fillna({"wind_direction": 0, "wind_speed": 0}, inplace=True)
-print(df_sbrj.sort_values("wind_speed", ascending=False).head(20))
+df_aeroporto.timestamp = pd.to_datetime(df_aeroporto.timestamp, utc=True)
+df_aeroporto.set_index("timestamp", inplace=True)
+df_aeroporto.fillna({"wind_direction": 0, "wind_speed": 0}, inplace=True)
+print(df_aeroporto.sort_values("wind_speed", ascending=False).head(20))
 
 print("\n----------------------------------------------------------------------")
 print("""
@@ -43,10 +51,10 @@ def altitude_menor_10000(value):
     return False
 
 
-df_sbrj['filtro_few'] = df_sbrj['clouds_few'].apply(altitude_menor_10000)
-df_sbrj['filtro_scattered'] = df_sbrj['clouds_scattered'].apply(altitude_menor_10000)
-df_sbrj['filtro_broken'] = df_sbrj['clouds_broken'].apply(altitude_menor_10000)
-df_sbrj['filtro_overcast'] = df_sbrj['clouds_overcast'].apply(altitude_menor_10000)
+df_aeroporto['filtro_few'] = df_aeroporto['clouds_few'].apply(altitude_menor_10000)
+df_aeroporto['filtro_scattered'] = df_aeroporto['clouds_scattered'].apply(altitude_menor_10000)
+df_aeroporto['filtro_broken'] = df_aeroporto['clouds_broken'].apply(altitude_menor_10000)
+df_aeroporto['filtro_overcast'] = df_aeroporto['clouds_overcast'].apply(altitude_menor_10000)
 
 def nivel_nuvem(row):
     if row['filtro_overcast']:
@@ -59,11 +67,11 @@ def nivel_nuvem(row):
         return 1
     return np.nan
 
-df_sbrj['nivel_nuvem'] = df_sbrj.apply(nivel_nuvem, axis=1)
+df_aeroporto['nivel_nuvem'] = df_aeroporto.apply(nivel_nuvem, axis=1)
 
-df_sbrj = df_sbrj.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
+df_aeroporto = df_aeroporto.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
 print("Nível de nuvem por temperatura")
-print(df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
+print(df_aeroporto.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
     {4: "overcast",
      3: "broken",
      2: "scattered",
@@ -71,19 +79,19 @@ print(df_sbrj.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
 
 # Eu só consigo fazer o replace permanente aqui porque no comando acima eu tenho
 # que pegar o valor máximo. Só consigo fazer isto com números
-df_sbrj["nivel_nuvem"] = df_sbrj["nivel_nuvem"].replace(
+df_aeroporto["nivel_nuvem"] = df_aeroporto["nivel_nuvem"].replace(
     {4: "overcast",
      3: "broken",
      2: "scattered",
      1: "few"})
 
 print("Tabela de frequencia percentual de tipos de nuvem")
-print(df_sbrj["nivel_nuvem"].value_counts(normalize=True) * 100)
-df_sbrj["nivel_nuvem"].value_counts(normalize=True).plot.bar()
+print(df_aeroporto["nivel_nuvem"].value_counts(normalize=True) * 100)
+df_aeroporto["nivel_nuvem"].value_counts(normalize=True).plot.bar()
 plt.title("Distribuição das Categorias de Nuvem")
 plt.savefig("Distribuição das Categorias de Nuvem.png")
 plt.close()
-print(df_sbrj)
+print(df_aeroporto)
 
 
 print("""
@@ -120,9 +128,9 @@ print("item 3.1")
 def to_kmh(wind):
     return wind * 1.852
 
-df_sbrj["wind_speed"] = df_sbrj["wind_speed"].apply(to_kmh)
-df_sbrj["cat_vento"] = pd.cut(
-    df_sbrj.wind_speed, 
+df_aeroporto["wind_speed"] = df_aeroporto["wind_speed"].apply(to_kmh)
+df_aeroporto["cat_vento"] = pd.cut(
+    df_aeroporto.wind_speed, 
     bins=[0, 2, 5, 11, 19, 28, 38, 49, 61, 74, 88, 102, 117, 9999],
     labels=["Calmo", "Bafagem", "Brisa leve", "Brisa fraca", "Brisa Moderada",
             "Brisa forte", "Vento fresco", "Vento forte", "Ventania", "Ventania fote",
@@ -131,17 +139,17 @@ df_sbrj["cat_vento"] = pd.cut(
 )
 
 print("tabela de frequencia numérica de tipos de vento")
-print(df_sbrj["cat_vento"].value_counts())
+print(df_aeroporto["cat_vento"].value_counts())
 
-df_sbrj["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
+df_aeroporto["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
 plt.title("Distribuição das Categorias de Vento")
 plt.savefig("Distribuição das Categorias de Vento.png")
 
 print("Item 3.2")
-print(pd.crosstab(df_sbrj["cat_vento"], df_sbrj["temperature"]).transpose())
+print(pd.crosstab(df_aeroporto["cat_vento"], df_aeroporto["temperature"]).transpose())
 
 print("Item 3.3")
-print(df_sbrj.groupby("cat_vento", observed=True)
+print(df_aeroporto.groupby("cat_vento", observed=True)
       .agg({"temperature": ["min", "max", "mean", "std"]}).
       dropna())
 
@@ -161,60 +169,60 @@ a pior formação de nuvens e os atrasos. Parece haver uma correlação?
 """
 )
 
-sbrj_partidas = pd.DataFrame()
-sbrj_chegadas = pd.DataFrame()
+aeroporto_partidas = pd.DataFrame()
+aeroporto_chegadas = pd.DataFrame()
 
 # Abrindo os datasets do Santos Dumont e concatenando em chegadas
 # e partidas
 for arquivo in os.listdir("voos"):
-    if "SBRJ" in arquivo:
+    if ICAO in arquivo:
         if "departures" in arquivo:
             partidas_do_dia = pd.read_excel("voos/" + arquivo)
-            sbrj_partidas = pd.concat([sbrj_partidas, partidas_do_dia])
+            aeroporto_partidas = pd.concat([aeroporto_partidas, partidas_do_dia])
         elif "arrivals" in arquivo:
             chegadas_do_dia = pd.read_excel("voos/" + arquivo)
-            sbrj_chegadas = pd.concat([sbrj_chegadas, chegadas_do_dia])
+            aeroporto_chegadas = pd.concat([aeroporto_chegadas, chegadas_do_dia])
 
-sbrj_partidas = sbrj_partidas[["departure_scheduled", "flight_icao", "departure_delay"]]
-sbrj_chegadas = sbrj_chegadas[["arrival_scheduled", "flight_icao", "arrival_delay"]]
-sbrj_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
-sbrj_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
+aeroporto_partidas = aeroporto_partidas[["departure_scheduled", "flight_icao", "departure_delay"]]
+aeroporto_chegadas = aeroporto_chegadas[["arrival_scheduled", "flight_icao", "arrival_delay"]]
+aeroporto_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
+aeroporto_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
 
 # Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
-sbrj_chegadas["atraso_chegada"] = (sbrj_chegadas["atraso_chegada"]
-.fillna(sbrj_chegadas["atraso_chegada"].median()))
+aeroporto_chegadas["atraso_chegada"] = (aeroporto_chegadas["atraso_chegada"]
+.fillna(aeroporto_chegadas["atraso_chegada"].median()))
 
-sbrj_partidas["atraso_partida"] = (sbrj_partidas["atraso_partida"]
-.fillna(sbrj_partidas["atraso_partida"].median()))
+aeroporto_partidas["atraso_partida"] = (aeroporto_partidas["atraso_partida"]
+.fillna(aeroporto_partidas["atraso_partida"].median()))
 
 
-sbrj_partidas["timestamp"] = pd.to_datetime(sbrj_partidas.timestamp, utc=True)
-sbrj_chegadas["timestamp"] = pd.to_datetime(sbrj_chegadas.timestamp, utc=True)
-sbrj_partidas.set_index("timestamp", inplace=True)
-sbrj_chegadas.set_index("timestamp", inplace=True)
+aeroporto_partidas["timestamp"] = pd.to_datetime(aeroporto_partidas.timestamp, utc=True)
+aeroporto_chegadas["timestamp"] = pd.to_datetime(aeroporto_chegadas.timestamp, utc=True)
+aeroporto_partidas.set_index("timestamp", inplace=True)
+aeroporto_chegadas.set_index("timestamp", inplace=True)
 
 # Setando o índice para ter apenas a hora cheia
-sbrj_partidas.index = sbrj_partidas.index.floor('h')
-sbrj_chegadas.index = sbrj_chegadas.index.floor('h')
+aeroporto_partidas.index = aeroporto_partidas.index.floor('h')
+aeroporto_chegadas.index = aeroporto_chegadas.index.floor('h')
 
-sbrj_partidas = sbrj_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
-sbrj_partidas.sort_index()
+aeroporto_partidas = aeroporto_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
+aeroporto_partidas.sort_index()
 
-df_sbrj = df_sbrj.merge(sbrj_partidas, how="inner", on="timestamp")
-df_sbrj = df_sbrj.merge(sbrj_chegadas, how="inner", on="timestamp")
+df_aeroporto = df_aeroporto.merge(aeroporto_partidas, how="inner", on="timestamp")
+df_aeroporto = df_aeroporto.merge(aeroporto_chegadas, how="inner", on="timestamp")
 
-cat_atraso_partida = pd.cut(df_sbrj["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
-cat_atraso_chegada = pd.cut(df_sbrj["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
+cat_atraso_partida = pd.cut(df_aeroporto["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
+cat_atraso_chegada = pd.cut(df_aeroporto["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
 
 print("----- Crosstab nível de nuvem x atraso partida -----")
-print(pd.crosstab(df_sbrj["nivel_nuvem"], cat_atraso_partida).transpose())
+print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_partida).transpose())
 print("----- Crosstab nível de nuvem x atraso chegada -----")
-print(pd.crosstab(df_sbrj["nivel_nuvem"], cat_atraso_chegada).transpose())
+print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_chegada).transpose())
 
 print("----- Crosstab categoria do vento x atraso partida -----")
-print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_partida).transpose())
+print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_partida).transpose())
 print("----- Crosstab categoria do vento x atraso chegada -----")
-print(pd.crosstab(df_sbrj["cat_vento"], cat_atraso_chegada).transpose())
+print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 
 print("""
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
@@ -226,15 +234,15 @@ Repita o procedimento, mas considerando apenas condições muito adversas de tem
 Visibilidade menor que 5000 e nuvens encobertas.
 """)
 
-df_sbrj["diff_temp"] = df_sbrj["temperature"] - df_sbrj["dew_point"]
+df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
 
-filtro_maior_10 = df_sbrj["diff_temp"] <= 10
-df_sbrj = df_sbrj[filtro_maior_10]
+filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
+df_aeroporto = df_aeroporto[filtro_maior_10]
 
-print(pd.crosstab(df_sbrj["diff_temp"] , [df_sbrj["nivel_nuvem"], df_sbrj["atraso_chegada"]]))
+print(pd.crosstab(df_aeroporto["diff_temp"] , [df_aeroporto["nivel_nuvem"], df_aeroporto["atraso_chegada"]]))
 
 print("Calculando para condições muito adversas")
 
-filtro_muito_adverso = (df_sbrj["nivel_nuvem"] == "overcast") & (df_sbrj["visibility"] < 5000)
-df_sbrj_adverso = df_sbrj[filtro_muito_adverso]
-print(pd.crosstab(df_sbrj_adverso["diff_temp"] , [df_sbrj_adverso["nivel_nuvem"], df_sbrj_adverso["atraso_chegada"]]))
+filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") & (df_aeroporto["visibility"] < 5000)
+df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
+print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))
