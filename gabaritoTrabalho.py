@@ -142,7 +142,6 @@ print(pd.crosstab(df_aeroporto["cat_vento"], df_aeroporto["temperature"]).transp
 
 print("Item 3.3")
 print(df_aeroporto.groupby("cat_vento", observed=True)
-print(df_aeroporto.groupby("cat_vento", observed=True)
       .agg({"temperature": ["min", "max", "mean", "std"]}).
       dropna())
 
@@ -249,4 +248,4 @@ filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") & (df_aeropor
 df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
 print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))
 
-print("Atraso médio", aeroporto_escolhido, (df_aeroporto["atraso_chegada"].mean() + df_aeroporto["atraso_partida"].mean()) / 2)
+print("Atraso médio", ICAO, (df_aeroporto["atraso_chegada"].mean() + df_aeroporto["atraso_partida"].mean()) / 2)
