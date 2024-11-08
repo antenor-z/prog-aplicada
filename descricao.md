@@ -24,14 +24,15 @@ Guarulhos.
 
 ## Base: Tempo
 
-Possui as informações históricas metereológicas. É obtido acessando no endereço:
+Possui as informações históricas metereológicas. É obtido acessando o endereço:
 http://a4barros.com/public/prog-aplicada/tempo.zip
 
 São quatro arquivos no formato 'dataset_ICAO.xlsx' onde
-ICAO=SBGL: Galeão
-ICAO=SBGR: Guarulhos
-ICAO=SBRJ: Santos Dumont
-ICAO=SBSP: Congonhas
+
+- ICAO=SBGL: Galeão
+- ICAO=SBGR: Guarulhos
+- ICAO=SBRJ: Santos Dumont
+- ICAO=SBSP: Congonhas
 
 ### Descrição de colunas
 
@@ -58,7 +59,7 @@ São vários arquivos no formato: 'YYYY-MM-DD-ICAO-arrivals.xlsx' ou
 Arrivals se refere as chegadas e departures as partidas.
 
 Por exemplo: 2024-10-29-SBGL-arrivals.xlsx São as chegadas para o Galeão do dia 29
-de novembro.
+de outubro.
 
 ### Descrição de colunas
 
@@ -80,7 +81,7 @@ UTC (YYYY-MM-DDTHH:MM:SS+00:00);
 - arrival_icao: Código ICAO do aeroporto de chegada (ex.: SBGR);
 - arrival_terminal: Terminal de chegada do voo;
 - arrival_gate: Portão de desembarque onde o voo chega (ex.: A02);
-- arrival_baggage: Número da esteira onde as bagagens do voo serão disponibilizadas (ex.: Esteira 04);
+- arrival_baggage: Número da esteira onde as bagagens do voo serão disponibilizadas (ex.: 04);
 - arrival_delay: Atraso na chegada do voo em minutos, considerando o horário programado.
 - arrival_scheduled: Horário programado para a chegada do voo no formato de hora 
 UTC;
@@ -88,7 +89,7 @@ UTC;
 - airline_name: Nome da companhia aérea operadora do voo (ex.: LATAM Airlines);
 - airline_iata: Código IATA da companhia aérea (ex.: LA para LATAM);
 - airline_icao: Código ICAO da companhia aérea (ex.: TAM para LATAM);
-- flight_number: Número único do voo designado pela companhia aérea (ex.: 1111);
+- flight_number: Número único do voo designado pela companhia aérea (ex.: 1234);
 - flight_iata: Código IATA completo do voo, formado pelo código da companhia e o número do voo (ex.: LA1234);
 - flight_icao: Código ICAO completo do voo, formado pelo código ICAO da companhia e o número do voo (ex.: TAM1234).
 
