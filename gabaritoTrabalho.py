@@ -3,15 +3,8 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-aeroporto_escolhido = "Santos Dumont"
-aeroportos = {
-    "Santos Dumont": "SBRJ",
-    "Galeão": "SBGL",
-    "Congonhas": "SBSP",
-    "Guarulhos": "SBGR",
-}
-ICAO = aeroportos[aeroporto_escolhido]
-df_aeroporto: pd.DataFrame = pd.read_excel(f"dataset_{ICAO}.xlsx")
+ICAO = "SBGL"
+df_aeroporto: pd.DataFrame = pd.read_excel(f"aeroportos/dataset_{ICAO}.xlsx")
 
 
 print("\n----------------------------------------------------------------------")
@@ -90,7 +83,6 @@ print(df_aeroporto["nivel_nuvem"].value_counts(normalize=True) * 100)
 df_aeroporto["nivel_nuvem"].value_counts(normalize=True).plot.bar()
 plt.title("Distribuição das Categorias de Nuvem")
 plt.savefig("Distribuição das Categorias de Nuvem.png")
-plt.close()
 print(df_aeroporto)
 
 
@@ -149,6 +141,7 @@ print("Item 3.2")
 print(pd.crosstab(df_aeroporto["cat_vento"], df_aeroporto["temperature"]).transpose())
 
 print("Item 3.3")
+print(df_aeroporto.groupby("cat_vento", observed=True)
 print(df_aeroporto.groupby("cat_vento", observed=True)
       .agg({"temperature": ["min", "max", "mean", "std"]}).
       dropna())
@@ -213,15 +206,21 @@ df_aeroporto = df_aeroporto.merge(aeroporto_chegadas, how="inner", on="timestamp
 
 cat_atraso_partida = pd.cut(df_aeroporto["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
 cat_atraso_chegada = pd.cut(df_aeroporto["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
+cat_atraso_partida = pd.cut(df_aeroporto["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
+cat_atraso_chegada = pd.cut(df_aeroporto["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
 
 print("----- Crosstab nível de nuvem x atraso partida -----")
 print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_partida).transpose())
+print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_partida).transpose())
 print("----- Crosstab nível de nuvem x atraso chegada -----")
+print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_chegada).transpose())
 print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_chegada).transpose())
 
 print("----- Crosstab categoria do vento x atraso partida -----")
 print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_partida).transpose())
+print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_partida).transpose())
 print("----- Crosstab categoria do vento x atraso chegada -----")
+print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 
 print("""
@@ -235,7 +234,10 @@ Visibilidade menor que 5000 e nuvens encobertas.
 """)
 
 df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
+df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
 
+filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
+df_aeroporto = df_aeroporto[filtro_maior_10]
 filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
 df_aeroporto = df_aeroporto[filtro_maior_10]
 

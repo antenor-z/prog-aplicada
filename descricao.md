@@ -6,27 +6,37 @@ Antenor Barros Leal 2011241
 -----------
 
 # Resumo
-Este trabalho tem como objetivo mostrar quais condições climáticas mudam os
-horários de voo.
+Este trabalho detalha o processamento e análise de dados meteorológicos e de 
+voos de aeroportos do sudeste brasileiro. A análise tem como objetivo identificar 
+como as condições climáticas influenciam nos atrasos de voos.
 
 Para responder esta pergunta usamos vários dataframes: um com as condições 
 climáticas em um aeroporto e outros com as partidas e chegadas deste aeroporto.
 
-Será feito o mesmo teste em alguns aeroportos do sudeste brasileiro: Santos
-Dumont (com código ICAO SBRJ), Galeão (SBGL), Congonhas (SBSP) e Guarulhos (SBGR).
+O aeroporto escolhido será o do Galeão, por ter um maior movimento que o Santos
+Dumont, portanto mais dados para serem analisados. Este aeroporto possui código ICAO
+SBGL que será usado ao longo do código para se referir a este aeroporto.
+
+Também serão comparados os atrasos com o aeroporto Santos Dumont, Congonhas e
+Guarulhos.
 
 # Bases de dados
 
 ## Base: Tempo
 
-Possui as informações históricas meteorológicas de alguns aeroportos. É obtido 
-acessando o endereço:
-https://a4barros.com/public/prog-aplicada/tempo.zip
+Possui as informações históricas metereológicas. É obtido acessando no endereço:
+http://a4barros.com/public/prog-aplicada/tempo.zip
+
+São quatro arquivos no formato 'dataset_ICAO.xlsx' onde
+ICAO=SBGL: Galeão
+ICAO=SBGR: Guarulhos
+ICAO=SBRJ: Santos Dumont
+ICAO=SBSP: Congonhas
 
 ### Descrição de colunas
 
-- wind_direction: Direção **de onde** o ventos sopra em graus;
-- wind_speed: Velocidade do vento em nós (milhas náuticas por hora);
+- wind_direction: Direção **de onde** o vento sopra em graus;
+- wind_speed: Velocidade do vento em nós (milhas nauticas por hora);
 - temperature: Temperatura em graus Célsius;
 - dew_point: Ponto de orvalho em graus Célsius;
 - qnh: Referência para o altímetro;
@@ -40,7 +50,15 @@ nuvens few (1/8 a 2/8 do céu) presentes;
 ## Base: Voos
 
 Contém dados de pousos e decolagens em vários aeroportos do sudeste.
-Pode ser obtida em https://a4barros.com/public/prog-aplicada/voos.zip
+Pode ser obtida em http://a4barros.com/public/prog-aplicada/voos.zip
+
+São vários arquivos no formato: 'YYYY-MM-DD-ICAO-arrivals.xlsx' ou 
+'YYYY-MM-DD-ICAO-departures.xlsx'.
+
+Arrivals se refere as chegadas e departures as partidas.
+
+Por exemplo: 2024-10-29-SBGL-arrivals.xlsx São as chegadas para o Galeão do dia 29
+de novembro.
 
 ### Descrição de colunas
 
