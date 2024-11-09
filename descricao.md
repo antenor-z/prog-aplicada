@@ -254,6 +254,7 @@ frequência. Porém elas são seguindas por nuvens encobertas.
 Para este aeroporto temos a grande predominância de ventos leves como mostra
 a tabela de frequência abaixo:
 
+```
 ----- tabela de frequencia numérica de tipos de vento -----
 Brisa leve             199
 Brisa fraca            185
@@ -269,10 +270,11 @@ Ventania fote            0
 Tempestade               0
 Furacao                  0
 Name: cat_vento, dtype: int64
+```
 
 O tipo de vento mais presente é Brisa leve.
 
-Vendo na forma de gráfico pizza temos:
+Vendo a mesma informação em forma de gráfico pizza temos:
 
 ![Galeão Distribuição das categorias de vento](./dist-cat-vento.png)
 
