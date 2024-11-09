@@ -11,12 +11,16 @@ print("\n----------------------------------------------------------------------"
 print("""
 1. Quando os valores de vento não aparecem, significa que não há vento. Complete 
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
-direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
+direção com com a mediana das direções. Completar com a mediana é usada para que
+ouliers não afetem algum cálculo de média feito com a direção do vento.
+Mostre os 20 primeiros valores ordenados por velocidade de vento.
 """)
 
 df_aeroporto.timestamp = pd.to_datetime(df_aeroporto.timestamp, utc=True)
 df_aeroporto.set_index("timestamp", inplace=True)
-df_aeroporto.fillna({"wind_direction": 0, "wind_speed": 0}, inplace=True)
+df_aeroporto.fillna(
+    {"wind_direction": df_aeroporto["wind_direction"].median(), "wind_speed": 0}, 
+    inplace=True)
 print(df_aeroporto.sort_values("wind_speed", ascending=False).head(20))
 
 print("\n----------------------------------------------------------------------")
@@ -35,7 +39,12 @@ Parece haver relação entre a nebulosidade e a temperatura?
 """)
 
 
-
+# Isto serve para filtrar valores menores que 10000 em vários formatos
+# A regra é retornar true se pelo menos um dos valores for menor que 10000
+# Por exemplo: 8000,15000 = true
+#              2000       = true
+#              12000,20000= false
+#              15000      = false
 def altitude_menor_10000(value):
     if isinstance(value, str):
         return any(int(num) < 10000 for num in value.split(','))
@@ -63,14 +72,14 @@ def nivel_nuvem(row):
 df_aeroporto['nivel_nuvem'] = df_aeroporto.apply(nivel_nuvem, axis=1)
 
 df_aeroporto = df_aeroporto.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
-print("Nível de nuvem por temperatura")
+print("----- Nível de nuvem por temperatura -----")
 print(df_aeroporto.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
     {4: "overcast",
      3: "broken",
      2: "scattered",
      1: "few"}))
 
-# Eu só consigo fazer o replace permanente aqui porque no comando acima eu tenho
+# Eu só consigo fazer o replace permanente aqui porque no comando de agg eu tenho
 # que pegar o valor máximo. Só consigo fazer isto com números
 df_aeroporto["nivel_nuvem"] = df_aeroporto["nivel_nuvem"].replace(
     {4: "overcast",
@@ -78,14 +87,17 @@ df_aeroporto["nivel_nuvem"] = df_aeroporto["nivel_nuvem"].replace(
      2: "scattered",
      1: "few"})
 
-print("Tabela de frequencia percentual de tipos de nuvem")
+print("----- Tabela de frequencia percentual de tipos de nuvem -----")
 print(df_aeroporto["nivel_nuvem"].value_counts(normalize=True) * 100)
+plt.close()
 df_aeroporto["nivel_nuvem"].value_counts(normalize=True).plot.bar()
-plt.title("Distribuição das Categorias de Nuvem")
-plt.savefig("Distribuição das Categorias de Nuvem.png")
-print(df_aeroporto)
+plt.xticks(rotation=0) # Fazer a legendas ficarem visiveis
+plt.title(f"{ICAO} - Distribuição das Categorias de Nuvem")
+plt.savefig(f"{ICAO}-cat-nuvem.png")
+#print(df_aeroporto)
+exit()
 
-
+print("\n----------------------------------------------------------------------")
 print("""
 3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
 para km/h. Crie as seguintes categorias para a velocidade do vento:
@@ -145,6 +157,7 @@ print(df_aeroporto.groupby("cat_vento", observed=True)
       .agg({"temperature": ["min", "max", "mean", "std"]}).
       dropna())
 
+print("\n----------------------------------------------------------------------")
 print(
 """
 4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
@@ -222,6 +235,7 @@ print("----- Crosstab categoria do vento x atraso chegada -----")
 print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 
+print("\n----------------------------------------------------------------------")
 print("""
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos

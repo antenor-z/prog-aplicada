@@ -97,7 +97,9 @@ UTC;
 
 1. Quando os valores de vento não aparecem, significa que não há vento. Complete 
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
-direção com zero. Mostre os 20 primeiros valores ordenados por velocidade de vento.
+direção com com a mediana das direções. Completar com a mediana é usada para que
+ouliers não afetem algum cálculo de média feito com a direção do vento.
+Mostre os 20 primeiros valores ordenados por velocidade de vento.
 
 * Objetivos: Preparar a coluna de vento para posterior análise. Ter uma ideia
 dos extremos de vento.
@@ -189,3 +191,55 @@ Visibilidade menor que 5000 e nuvens encobertas.
 medida influencia nos atrasos.
 
 * Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)
+
+# Conclusões
+
+## 1
+
+O aeroporto do Galeão, em relação a velocidade de vento, teve um outlier em que 
+o vento chegou a 63 km/h no dia 29/10/2024 as 23h (UTC). O segundo vento mais 
+veloz foi 19km/h dia 26/10 as 19h (UTC).
+
+```
+                           wind_direction  wind_speed  temperature  dew_point  ...
+timestamp                                                                                                                                                 
+2024-10-29 23:00:00+00:00            90.0        63.0           23         19  ...
+2024-10-26 19:00:00+00:00           210.0        19.0           32         20  ...
+2024-10-30 16:00:00+00:00           160.0        18.0           28         19  ...
+
+```
+
+## 2
+
+Para o aeroporto analisado, temos uma correlação entre o a temperatura e o tipo
+mais nebuloso de nuvem. De 20 graus até 26, temos apenas formações encobertas.
+De 27 à 35 temos tanto algumas nuvens (broken) como nuvens espalhadas (scattered).
+Na temperatura mais quente temos poucas nuvens.
+
+```
+----- Nível de nuvem por temperatura -----
+            nivel_nuvem
+temperature            
+20             overcast
+21             overcast
+22             overcast
+23             overcast
+24             overcast
+25             overcast
+26             overcast
+27               broken
+28               broken
+29               broken
+30            scattered
+31               broken
+32               broken
+33            scattered
+34            scattered
+35            scattered
+36                  few
+```
+
+Porém na maior parte do tempo tivemos poucas nuvens como mostra o gráfico de
+frequência. Porém elas são seguindas por nuvens encobertas.
+
+![Galeão Distribuição das categorias de nuvem](./SBGL-cat-nuvem.png)
