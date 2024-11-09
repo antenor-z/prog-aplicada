@@ -111,7 +111,7 @@ overcast (encoberto) são listas de números separados por vírgula com a altitu
 de cada nuvem. Por exemplo, few com valor "10000,12000" indicam poucas nuvens em 
 10 mil pés e 12 mil pés.
 
-Crie uma coluna pior_tipo_nuvem com o valor do tipo de nuvem mais encoberto 
+Crie uma coluna 'nivel_nuvem' com o valor do tipo de nuvem mais encoberto 
 seguindo a ordem few < scatered < broken < overcast. Para garantir que as nuvens 
 realmente afetam o aeroporto, considere APENAS nuvens abaixo de 10 mil pés.
 

@@ -30,7 +30,7 @@ overcast (encoberto) são listas de números separados por vírgula com a altitu
 de cada nuvem. Por exemplo, few com valor "10000,12000" indicam poucas nuvens em 
 10 mil pés e 12 mil pés.
 
-Crie uma coluna pior_tipo_nuvem com o valor do tipo de nuvem mais encoberto 
+Crie uma coluna 'nivel_nuvem' com o valor do tipo de nuvem mais encoberto 
 seguindo a ordem few < scatered < broken < overcast. Para garantir que as nuvens 
 realmente afetam o aeroporto, considere APENAS nuvens abaixo de 10 mil pés.
 
@@ -251,8 +251,6 @@ df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_poin
 
 filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
 df_aeroporto = df_aeroporto[filtro_maior_10]
-filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
-df_aeroporto = df_aeroporto[filtro_maior_10]
 
 print(pd.crosstab(df_aeroporto["diff_temp"] , [df_aeroporto["nivel_nuvem"], df_aeroporto["atraso_chegada"]]))
 
@@ -261,5 +259,3 @@ print("Calculando para condições muito adversas")
 filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") & (df_aeroporto["visibility"] < 5000)
 df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
 print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))
-
-print("Atraso médio", ICAO, (df_aeroporto["atraso_chegada"].mean() + df_aeroporto["atraso_partida"].mean()) / 2)
