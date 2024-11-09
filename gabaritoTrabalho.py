@@ -162,7 +162,6 @@ tabela_freq_2 = (df_aeroporto.groupby("cat_vento", observed=True)
 
 tabela_freq_2["amplitude"] = tabela_freq_2["temperature"]["max"]- tabela_freq_2["temperature"]["min"]
 print(tabela_freq_2)
-exit()
 
 print("\n----------------------------------------------------------------------")
 print(
@@ -250,7 +249,7 @@ que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 diferença tem influência nos atrasos para cada tipo de nuvem.
       
 Repita o procedimento, mas considerando apenas condições muito adversas de tempo.
-Visibilidade menor que 5000 e nuvens encobertas.
+Visibilidade menor que 5000 e nuvens overcast ou broken.
 """)
 
 df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
@@ -263,6 +262,7 @@ print(pd.crosstab(df_aeroporto["diff_temp"] , [df_aeroporto["nivel_nuvem"], df_a
 
 print("Calculando para condições muito adversas")
 
-filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") & (df_aeroporto["visibility"] < 5000)
+filtro_muito_adverso = ((df_aeroporto["nivel_nuvem"] == "overcast") | ((df_aeroporto["nivel_nuvem"] == "broken") )
+& (df_aeroporto["visibility"] < 5000))
 df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
 print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))

@@ -187,7 +187,7 @@ que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 diferença tem influência nos atrasos para cada tipo de nuvem.
       
 Repita o procedimento, mas considerando apenas condições muito adversas de tempo.
-Visibilidade menor que 5000 e nuvens encobertas.
+Visibilidade menor que 5000 e nuvens overcast ou broken.
 
 * Objetivo: Criar uma medida proporcional a chance a chuva e verificar se esta 
 medida influencia nos atrasos.
