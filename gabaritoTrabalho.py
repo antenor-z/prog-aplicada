@@ -72,7 +72,7 @@ def nivel_nuvem(row):
 df_aeroporto['nivel_nuvem'] = df_aeroporto.apply(nivel_nuvem, axis=1)
 
 df_aeroporto = df_aeroporto.drop(columns=['filtro_few', 'filtro_scattered', 'filtro_broken', 'filtro_overcast'])
-print("----- Nível de nuvem por temperatura -----")
+print("----- Pior nível de nuvem abaixo de 10 mil por temperatura -----")
 print(df_aeroporto.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
     {4: "overcast",
      3: "broken",
@@ -95,7 +95,6 @@ plt.xticks(rotation=0) # Fazer a legendas ficarem visiveis
 plt.title(f"{ICAO} - Distribuição das Categorias de Nuvem")
 plt.savefig(f"{ICAO}-cat-nuvem.png")
 #print(df_aeroporto)
-exit()
 
 print("\n----------------------------------------------------------------------")
 print("""
@@ -124,8 +123,8 @@ Qual é o tipo de vento mais presente?
 3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
 valores de temperatura. Em qual faixa de temperatura ocorrem mais ventos?
 
-3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
-padrão. Parece haver relação entre velocidade do vento e temperatura?
+3.3. Para cada faixa de vento mostre temperatura mínima, média e máxima. 
+Parece haver relação entre velocidade do vento e temperatura?
 """)
 
 print("item 3.1")
@@ -142,20 +141,28 @@ df_aeroporto["cat_vento"] = pd.cut(
     include_lowest=True
 )
 
-print("tabela de frequencia numérica de tipos de vento")
+print("----- tabela de frequencia numérica de tipos de vento -----")
 print(df_aeroporto["cat_vento"].value_counts())
 
+
+plt.close()
 df_aeroporto["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
 plt.title("Distribuição das Categorias de Vento")
-plt.savefig("Distribuição das Categorias de Vento.png")
+plt.savefig("dist-cat-vento.png")
 
 print("Item 3.2")
-print(pd.crosstab(df_aeroporto["cat_vento"], df_aeroporto["temperature"]).transpose())
+tabela_freq = pd.crosstab(df_aeroporto["cat_vento"], df_aeroporto["temperature"]).transpose()
+tabela_freq["total"] = tabela_freq.sum(axis=1)
+print(tabela_freq.sort_values("total", ascending=False))
 
 print("Item 3.3")
-print(df_aeroporto.groupby("cat_vento", observed=True)
-      .agg({"temperature": ["min", "max", "mean", "std"]}).
+tabela_freq_2 = (df_aeroporto.groupby("cat_vento", observed=True)
+      .agg({"temperature": ["min", "max", "mean"]}).
       dropna())
+
+tabela_freq_2["amplitude"] = tabela_freq_2["temperature"]["max"]- tabela_freq_2["temperature"]["min"]
+print(tabela_freq_2)
+exit()
 
 print("\n----------------------------------------------------------------------")
 print(

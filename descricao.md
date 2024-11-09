@@ -104,7 +104,8 @@ Mostre os 20 primeiros valores ordenados por velocidade de vento.
 * Objetivos: Preparar a coluna de vento para posterior análise. Ter uma ideia
 dos extremos de vento.
 
-* Requisitos atendidos: 2 (preenchimento de valores ausentes)
+* Requisitos atendidos: 2 (preenchimento de valores ausentes), 8 (medidas de
+sumarização: mediana)
 
 2. Os valores de nuvens few (poucas), scatered (espalhadas), broken (muitas) e 
 overcast (encoberto) são listas de números separados por vírgula com a altitude 
@@ -159,7 +160,8 @@ na meteorologia e verificar a existência de relação entre as categorias de ve
 e a temperatura.
 
 * Requisitos atendidos: 4 (categorização com pd.cut), 3 (apply), 9 (cruzamento
-simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza)
+simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza),
+6 (tabela de frequência com valores absolutos)
 
 4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
 chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os 
@@ -212,12 +214,13 @@ timestamp
 ## 2
 
 Para o aeroporto analisado, temos uma correlação entre o a temperatura e o tipo
-mais nebuloso de nuvem. De 20 graus até 26, temos apenas formações encobertas.
-De 27 à 35 temos tanto algumas nuvens (broken) como nuvens espalhadas (scattered).
-Na temperatura mais quente temos poucas nuvens.
+mais nebuloso de nuvem. De 20 graus até 26 (inclusivo), temos apenas formações 
+totalmente encobertas.
+De 27 à 35 temos tanto nuvens (broken) como nuvens espalhadas (scattered).
+Na temperatura mais quente (36) temos poucas nuvens.
 
 ```
------ Nível de nuvem por temperatura -----
+----- Pior nível de nuvem abaixo de 10 mil por temperatura -----
             nivel_nuvem
 temperature            
 20             overcast
@@ -243,3 +246,79 @@ Porém na maior parte do tempo tivemos poucas nuvens como mostra o gráfico de
 frequência. Porém elas são seguindas por nuvens encobertas.
 
 ![Galeão Distribuição das categorias de nuvem](./SBGL-cat-nuvem.png)
+
+## 3
+
+### 3.1
+
+Para este aeroporto temos a grande predominância de ventos leves como mostra
+a tabela de frequência abaixo:
+
+----- tabela de frequencia numérica de tipos de vento -----
+Brisa leve             199
+Brisa fraca            185
+Brisa Moderada          54
+Bafagem                 40
+Calmo                   13
+Brisa forte              8
+Tempestade violenta      1
+Vento fresco             0
+Vento forte              0
+Ventania                 0
+Ventania fote            0
+Tempestade               0
+Furacao                  0
+Name: cat_vento, dtype: int64
+
+O tipo de vento mais presente é Brisa leve.
+
+Vendo na forma de gráfico pizza temos:
+
+![Galeão Distribuição das categorias de vento](./dist-cat-vento.png)
+
+### 3.2
+
+A maior quantidade de ventos de qualquer tipo ocorre em 22 graus e em outras
+temperaturas mais baixas.
+
+```
+cat_vento    Calmo  Bafagem  Brisa leve  Brisa fraca  Brisa Moderada  Brisa forte  Tempestade violenta  total
+temperature                                                                                                  
+22               3        7          39           21               1            0                    0     71
+23               1       11          23           20               1            0                    1     57
+25               0        3          21           26               6            0                    0     56
+24               0        7          25           19               4            0                    0     55
+26               1        3          14           23               5            0                    0     46
+21               1        4          27            5               1            0                    0     38
+27               3        1           7           10              10            2                    0     33
+28               0        0          12           11               7            1                    0     31
+29               1        0           7            9               6            0                    0     23
+30               0        0           3           10               7            0                    0     20
+20               1        4           9            3               0            0                    0     17
+31               0        0           4            8               2            0                    0     14
+33               0        0           6            5               1            2                    0     14
+32               0        0           1            6               1            2                    0     10
+34               1        0           1            5               1            1                    0      9
+35               1        0           0            3               1            0                    0      5
+36               0        0           0            1               0            0                    0      1
+```
+
+### 3.3
+
+O tipo de vento mais forte neste aeroporto (Tempestade violenta) ocorreu em uma 
+temperatura mais baixa onde a amplitude estava zero. Porém não parace haver uma
+relação significativa entre a temperatura e o tipo de vento.
+
+```
+                    temperature                amplitude
+                            min max       mean          
+cat_vento                                               
+Calmo                        20  35  25.769231        15
+Bafagem                      20  27  22.975000         7
+Brisa leve                   20  34  24.266332        14
+Brisa fraca                  20  36  26.194595        16
+Brisa Moderada               21  35  27.555556        14
+Brisa forte                  27  34  30.750000         7
+Tempestade violenta          23  23  23.000000         0
+
+```
