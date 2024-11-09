@@ -281,32 +281,12 @@ Vendo na forma de gráfico pizza temos:
 A maior quantidade de ventos de qualquer tipo ocorre em 22 graus e em outras
 temperaturas mais baixas.
 
-```
-cat_vento    Calmo  Bafagem  Brisa leve  Brisa fraca  Brisa Moderada  Brisa forte  Tempestade violenta  total
-temperature                                                                                                  
-22               3        7          39           21               1            0                    0     71
-23               1       11          23           20               1            0                    1     57
-25               0        3          21           26               6            0                    0     56
-24               0        7          25           19               4            0                    0     55
-26               1        3          14           23               5            0                    0     46
-21               1        4          27            5               1            0                    0     38
-27               3        1           7           10              10            2                    0     33
-28               0        0          12           11               7            1                    0     31
-29               1        0           7            9               6            0                    0     23
-30               0        0           3           10               7            0                    0     20
-20               1        4           9            3               0            0                    0     17
-31               0        0           4            8               2            0                    0     14
-33               0        0           6            5               1            2                    0     14
-32               0        0           1            6               1            2                    0     10
-34               1        0           1            5               1            1                    0      9
-35               1        0           0            3               1            0                    0      5
-36               0        0           0            1               0            0                    0      1
-```
+![](./cat-vento.png)
 
 ### 3.3
 
 O tipo de vento mais forte neste aeroporto (Tempestade violenta) ocorreu em uma 
-temperatura mais baixa onde a amplitude estava zero. Porém não parace haver uma
+temperatura mais baixa onde a amplitude estava zero. Porém não parece haver uma
 relação significativa entre a temperatura e o tipo de vento.
 
 ```
