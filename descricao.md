@@ -1,8 +1,9 @@
 # PROGRAMAÇÃO APLICADA
 
 ## Trabalho 2
-Antenor Barros Leal
+Antenor Barros Leal \
 Guilherme Montenegro Banharo
+
 -----------
 
 # Resumo
