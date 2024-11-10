@@ -166,12 +166,7 @@ print(tabela_freq_2)
 print("\n----------------------------------------------------------------------")
 print(
 """
-4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
-chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os 
-timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada 
-hora, teremos o tempo médio de atraso. Faça o mesmo para as partidas criando o 
-dataframe atraso-partidas-SBRJ.
-
+4. Junte os dataframes de dados de voo de um mesmo aeroporto.
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
 
@@ -186,7 +181,13 @@ galeao_chegadas = pd.DataFrame()
 todos_aeroportos_partidas = pd.DataFrame()
 todos_aeroportos_chegadas = pd.DataFrame()
 
-# Pegandos todos os arquivos com os voos do aeroportos e organizando
+# Como é possível ver na pasta "voos" são 124 arquivos de excel.
+# Pegando todos os arquivos com os voos do aeroportos e organizando
+# em dois dataframes todos_aeroportos_partidas e todos_aeroportos_chegadas
+# Cada um tem as colunas: ICAO, timestamp, flight_icao, atraso_chegada (ou partida)
+
+# Nesta questão só o Galeão (SBGL) é usado. Mas carreguei todos logo porque mais
+# na frente será feita comparação entre aeroportos
 for ICAO in ["SBRJ", "SBGR", "SBGL", "SBSP"]:
     for arquivo in os.listdir("voos"):
         if ICAO in arquivo:
@@ -210,10 +211,8 @@ filtro_partida_galeao = todos_aeroportos_partidas["ICAO"] == "SBGL"
 galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao]
 
 # Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
-galeao_chegadas.loc[:, "atraso_chegada"] = (galeao_chegadas["atraso_chegada"]
-.fillna(galeao_chegadas["atraso_chegada"].median()))
-galeao_partidas.loc[:, "atraso_partida"] = (galeao_partidas["atraso_partida"]
-.fillna(galeao_partidas["atraso_partida"].median()))
+galeao_chegadas.fillna({"atraso_chegada": galeao_chegadas["atraso_chegada"].median()})
+galeao_partidas.fillna({"atraso_partida": galeao_partidas["atraso_partida"].median()})
 
 galeao_partidas["timestamp"] = pd.to_datetime(galeao_partidas.timestamp, utc=True)
 galeao_chegadas["timestamp"] = pd.to_datetime(galeao_chegadas.timestamp, utc=True)

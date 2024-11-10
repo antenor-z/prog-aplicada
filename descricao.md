@@ -163,12 +163,7 @@ e a temperatura.
 simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza),
 6 (tabela de frequência com valores absolutos)
 
-4. Junte os dataframes de dados de voo de um mesmo aeroporto. Faça os dataframes 
-chegadas_SBRJ e partidas_SBRJ. Crie um dataframe atraso_chegadas_SBRJ com os 
-timestamps agrupados por hora e a média de tempo de atraso. Ou seja, para cada 
-hora, teremos o tempo médio de atraso. Faça o mesmo para as partidas criando o 
-dataframe atraso-partidas-SBRJ.
-
+4. Junte os dataframes de dados de voo de um mesmo aeroporto.
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
 
