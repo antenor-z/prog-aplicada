@@ -224,6 +224,8 @@ galeao_chegadas.index = galeao_chegadas.index.floor('h')
 
 galeao_partidas = galeao_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
 galeao_partidas.sort_index(inplace=True)
+galeao_chegadas = galeao_chegadas.groupby("timestamp").agg({"atraso_chegada": "mean"})
+galeao_chegadas.sort_index(inplace=True)
 
 df_aeroporto = df_aeroporto.merge(galeao_partidas, how="inner", on="timestamp")
 df_aeroporto = df_aeroporto.merge(galeao_chegadas, how="inner", on="timestamp")
@@ -269,6 +271,8 @@ naquela hora. Mostre apenas as linhas que possuem atrasos maiores que 1h.
 Destes qual aeroporto tem o maior atraso acumulado?
 """)
 print("----- Atraso médio por hora das partidas ----- ")
+todos_aeroportos_partidas.index = todos_aeroportos_partidas.index.floor('h')
+todos_aeroportos_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
 atraso_partidas = pd.crosstab(todos_aeroportos_partidas.index, 
                               todos_aeroportos_partidas.ICAO, 
                               todos_aeroportos_partidas.atraso_partida, 
@@ -280,6 +284,8 @@ print(atraso_partidas_mais_30_min)
 
 
 print("----- Atraso médio por hora das chegadas ----- ")
+todos_aeroportos_chegadas.index = todos_aeroportos_chegadas.index.floor('h')
+todos_aeroportos_chegadas.groupby("timestamp").agg({"atraso_chegada": "mean"})
 atraso_chegadas = pd.crosstab(todos_aeroportos_chegadas.index, 
                               todos_aeroportos_chegadas.ICAO, 
                               todos_aeroportos_chegadas.atraso_chegada, 
