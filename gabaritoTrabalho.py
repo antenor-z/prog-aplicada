@@ -180,65 +180,65 @@ a pior formação de nuvens e os atrasos. Parece haver uma correlação?
 """
 )
 
-aeroporto_partidas = pd.DataFrame()
-aeroporto_chegadas = pd.DataFrame()
+galeao_partidas = pd.DataFrame()
+galeao_chegadas = pd.DataFrame()
 
-# Abrindo os datasets do Santos Dumont e concatenando em chegadas
-# e partidas
-for arquivo in os.listdir("voos"):
-    if ICAO in arquivo:
-        if "departures" in arquivo:
-            partidas_do_dia = pd.read_excel("voos/" + arquivo)
-            aeroporto_partidas = pd.concat([aeroporto_partidas, partidas_do_dia])
-        elif "arrivals" in arquivo:
-            chegadas_do_dia = pd.read_excel("voos/" + arquivo)
-            aeroporto_chegadas = pd.concat([aeroporto_chegadas, chegadas_do_dia])
+todos_aeroportos_partidas = pd.DataFrame()
+todos_aeroportos_chegadas = pd.DataFrame()
 
-aeroporto_partidas = aeroporto_partidas[["departure_scheduled", "flight_icao", "departure_delay"]]
-aeroporto_chegadas = aeroporto_chegadas[["arrival_scheduled", "flight_icao", "arrival_delay"]]
-aeroporto_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
-aeroporto_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
+# Pegandos todos os arquivos com os voos do aeroportos e organizando
+for ICAO in ["SBRJ", "SBGR", "SBGL", "SBSP"]:
+    for arquivo in os.listdir("voos"):
+        if ICAO in arquivo:
+            if "departures" in arquivo:
+                partidas_do_dia = pd.read_excel("voos/" + arquivo)
+                partidas_do_dia["ICAO"] = ICAO
+                todos_aeroportos_partidas = pd.concat([todos_aeroportos_partidas, partidas_do_dia])
+            elif "arrivals" in arquivo:
+                chegadas_do_dia = pd.read_excel("voos/" + arquivo)
+                chegadas_do_dia["ICAO"] = ICAO
+                todos_aeroportos_chegadas = pd.concat([todos_aeroportos_chegadas, chegadas_do_dia])
+
+todos_aeroportos_partidas = todos_aeroportos_partidas[["ICAO", "departure_scheduled", "flight_icao", "departure_delay"]]
+todos_aeroportos_chegadas = todos_aeroportos_chegadas[["ICAO", "arrival_scheduled", "flight_icao", "arrival_delay"]]
+todos_aeroportos_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
+todos_aeroportos_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
+
+filtro_chegada_galeao = todos_aeroportos_chegadas["ICAO"] == "SBGL"
+galeao_chegadas = todos_aeroportos_chegadas[filtro_chegada_galeao]
+filtro_partida_galeao = todos_aeroportos_partidas["ICAO"] == "SBGL"
+galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao]
 
 # Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
-aeroporto_chegadas["atraso_chegada"] = (aeroporto_chegadas["atraso_chegada"]
-.fillna(aeroporto_chegadas["atraso_chegada"].median()))
+galeao_chegadas.loc[:, "atraso_chegada"] = (galeao_chegadas["atraso_chegada"]
+.fillna(galeao_chegadas["atraso_chegada"].median()))
+galeao_partidas.loc[:, "atraso_partida"] = (galeao_partidas["atraso_partida"]
+.fillna(galeao_partidas["atraso_partida"].median()))
 
-aeroporto_partidas["atraso_partida"] = (aeroporto_partidas["atraso_partida"]
-.fillna(aeroporto_partidas["atraso_partida"].median()))
+galeao_partidas["timestamp"] = pd.to_datetime(galeao_partidas.timestamp, utc=True)
+galeao_chegadas["timestamp"] = pd.to_datetime(galeao_chegadas.timestamp, utc=True)
+galeao_partidas.set_index("timestamp", inplace=True)
+galeao_chegadas.set_index("timestamp", inplace=True)
 
+galeao_partidas.index = galeao_partidas.index.floor('h')
+galeao_chegadas.index = galeao_chegadas.index.floor('h')
 
-aeroporto_partidas["timestamp"] = pd.to_datetime(aeroporto_partidas.timestamp, utc=True)
-aeroporto_chegadas["timestamp"] = pd.to_datetime(aeroporto_chegadas.timestamp, utc=True)
-aeroporto_partidas.set_index("timestamp", inplace=True)
-aeroporto_chegadas.set_index("timestamp", inplace=True)
+galeao_partidas = galeao_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
+galeao_partidas.sort_index(inplace=True)
 
-# Setando o índice para ter apenas a hora cheia
-aeroporto_partidas.index = aeroporto_partidas.index.floor('h')
-aeroporto_chegadas.index = aeroporto_chegadas.index.floor('h')
+df_aeroporto = df_aeroporto.merge(galeao_partidas, how="inner", on="timestamp")
+df_aeroporto = df_aeroporto.merge(galeao_chegadas, how="inner", on="timestamp")
 
-aeroporto_partidas = aeroporto_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
-aeroporto_partidas.sort_index()
-
-df_aeroporto = df_aeroporto.merge(aeroporto_partidas, how="inner", on="timestamp")
-df_aeroporto = df_aeroporto.merge(aeroporto_chegadas, how="inner", on="timestamp")
-
-cat_atraso_partida = pd.cut(df_aeroporto["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
-cat_atraso_chegada = pd.cut(df_aeroporto["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
 cat_atraso_partida = pd.cut(df_aeroporto["atraso_partida"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
 cat_atraso_chegada = pd.cut(df_aeroporto["atraso_chegada"], bins=[0, 10, 30, 60, 9999], labels=["baixo atraso", "médio atraso", "alto atraso", "altíssimo atraso"], include_lowest=True)
 
 print("----- Crosstab nível de nuvem x atraso partida -----")
 print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_partida).transpose())
-print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_partida).transpose())
 print("----- Crosstab nível de nuvem x atraso chegada -----")
 print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_chegada).transpose())
-print(pd.crosstab(df_aeroporto["nivel_nuvem"], cat_atraso_chegada).transpose())
-
 print("----- Crosstab categoria do vento x atraso partida -----")
 print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_partida).transpose())
-print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_partida).transpose())
 print("----- Crosstab categoria do vento x atraso chegada -----")
-print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 print(pd.crosstab(df_aeroporto["cat_vento"], cat_atraso_chegada).transpose())
 
 print("\n----------------------------------------------------------------------")
