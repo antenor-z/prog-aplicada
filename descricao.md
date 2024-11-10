@@ -108,6 +108,8 @@ dos extremos de vento.
 * Requisitos atendidos: 2 (preenchimento de valores ausentes), 8 (medidas de
 sumarização: mediana)
 
+------
+
 2. Os valores de nuvens few (poucas), scatered (espalhadas), broken (muitas) e 
 overcast (encoberto) são listas de números separados por vírgula com a altitude 
 de cada nuvem. Por exemplo, few com valor "10000,12000" indicam poucas nuvens em 
@@ -127,6 +129,7 @@ coluna com o tipo de nuvem mais crítico.
 * Requisitos atendidos: 3 (apply), 8 (medidas de sumarização (grupos simples)),
 7 (gráfico barra)
 
+------
 
 3. A velocidade de vento está expressa em nós (milhas náuticas por hora), converta 
 para km/h. Crie as seguintes categorias para a velocidade do vento:
@@ -164,6 +167,8 @@ e a temperatura.
 simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza),
 6 (tabela de frequência com valores absolutos)
 
+------
+
 4. Junte os dataframes de dados de voo de um mesmo aeroporto.
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
@@ -177,6 +182,8 @@ atrasos de voo.
 * Requisitos atendidos: 1 (Concatenação), 2 (preenchimento de valores ausentes),
 4 (categorização com pd.cut), 9 (cruzamento simples)
 
+------
+
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 100% de chance de chuva. Retire valores maiores de 10 graus, porque são outliers
@@ -187,6 +194,8 @@ medida influencia nos atrasos.
 
 * Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)
 
+------
+
 6. Crie uma tabela no seguinte formato em que cada coluna é um aeroporto e
 cada linha é uma hora. Como valores, temos a média de atraso naquele aeroporto
 naquela hora. Mostre apenas as linhas que possuem atrasos maiores que 1h.
@@ -195,6 +204,8 @@ Destes qual aeroporto tem o maior atraso acumulado?
 * Objetivo: Ver qual aeroporto tem o pior somatório de atrasos
 * Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro), 8 (medidas de
 sumarização)
+
+------
 
 7. Qual foi o pior atraso no aeroporto de congonhas no último dia de outubro?
 
