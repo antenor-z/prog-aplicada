@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+pd.set_option('display.max_rows', None)
 
 ICAO = "SBGL"
 df_aeroporto: pd.DataFrame = pd.read_excel(f"aeroportos/dataset_{ICAO}.xlsx")
@@ -243,11 +244,8 @@ print("\n----------------------------------------------------------------------"
 print("""
 5. Calculando a diferença entre a temperatura e o ponto de orvalho temos um valor
 que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
-100% de chance de chuva. Retire valores maiores de 10 graus. Verifique se esta 
-diferença tem influência nos atrasos para cada tipo de nuvem.
-      
-Repita o procedimento, mas considerando apenas condições muito adversas de tempo.
-Visibilidade menor que 5000 e nuvens overcast ou broken.
+100% de chance de chuva. Retire valores maiores de 10 graus, porque são outliers
+e filtre por tempo muito nebuloso ou visibiliade menor que 5km.
 """)
 
 df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
@@ -256,14 +254,12 @@ df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_poin
 filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
 df_aeroporto = df_aeroporto[filtro_maior_10]
 
-print(pd.crosstab(df_aeroporto["diff_temp"] , [df_aeroporto["nivel_nuvem"], df_aeroporto["atraso_chegada"]]))
-
-print("Calculando para condições muito adversas")
-
-filtro_muito_adverso = ((df_aeroporto["nivel_nuvem"] == "overcast") | ((df_aeroporto["nivel_nuvem"] == "broken") )
-& (df_aeroporto["visibility"] < 5000))
+filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") | (df_aeroporto["visibility"] < 5000)
 df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
-print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))
+df_aeroporto_adverso["atraso"] = round(df_aeroporto_adverso["atraso_chegada"] + df_aeroporto_adverso["atraso_partida"] / 2)
+cross = pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso"]])
+cross["total_atrasos"] = cross.sum(axis=1)
+print(cross)
 
 print(
 """
