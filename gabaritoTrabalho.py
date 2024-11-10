@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
+from datetime import datetime
 pd.set_option('display.max_rows', None)
 
 ICAO = "SBGL"
@@ -309,3 +310,11 @@ soma_atrasos_df = pd.DataFrame({
 }).fillna(0) 
 
 print(soma_atrasos_df)
+
+print("""
+Qual foi o pior atraso no aeroporto de congonhas no último dia de outubro?   
+""")
+filtro_sbsp = todos_aeroportos_partidas["ICAO"] == "SBSP"
+filtro_dia = todos_aeroportos_partidas.index.date == pd.to_datetime('2024-10-31').date()
+
+print(todos_aeroportos_partidas[filtro_sbsp & filtro_dia].max())

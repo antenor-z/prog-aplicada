@@ -187,6 +187,21 @@ medida influencia nos atrasos.
 
 * Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)
 
+6. Crie uma tabela no seguinte formato em que cada coluna é um aeroporto e
+cada linha é uma hora. Como valores, temos a média de atraso naquele aeroporto
+naquela hora. Mostre apenas as linhas que possuem atrasos maiores que 1h.
+Destes qual aeroporto tem o maior atraso acumulado?
+
+* Objetivo: Ver qual aeroporto tem o pior somatório de atrasos
+* Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro), 8 (medidas de
+sumarização)
+
+7. Qual foi o pior atraso no aeroporto de congonhas no último dia de outubro?
+
+* Objetivo: Ver o pior atraso de um dia específico em um aeroporto específico
+* Requisitos atendidos: 5 (filtro de índice e filtro de valor)
+
+
 # Conclusões
 
 ## 1
