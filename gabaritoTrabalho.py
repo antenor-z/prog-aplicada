@@ -204,6 +204,10 @@ todos_aeroportos_partidas = todos_aeroportos_partidas[["ICAO", "departure_schedu
 todos_aeroportos_chegadas = todos_aeroportos_chegadas[["ICAO", "arrival_scheduled", "flight_icao", "arrival_delay"]]
 todos_aeroportos_partidas.rename({"departure_delay": "atraso_partida", "departure_scheduled": "timestamp"}, axis=1, inplace=True)
 todos_aeroportos_chegadas.rename({"arrival_delay": "atraso_chegada", "arrival_scheduled": "timestamp"}, axis=1, inplace=True)
+todos_aeroportos_partidas["timestamp"] = pd.to_datetime(todos_aeroportos_partidas.timestamp, utc=True)
+todos_aeroportos_chegadas["timestamp"] = pd.to_datetime(todos_aeroportos_chegadas.timestamp, utc=True)
+todos_aeroportos_partidas.set_index("timestamp", inplace=True)
+todos_aeroportos_chegadas.set_index("timestamp", inplace=True)
 
 filtro_chegada_galeao = todos_aeroportos_chegadas["ICAO"] == "SBGL"
 galeao_chegadas = todos_aeroportos_chegadas[filtro_chegada_galeao]
@@ -213,11 +217,6 @@ galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao]
 # Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
 galeao_chegadas.fillna({"atraso_chegada": galeao_chegadas["atraso_chegada"].median()})
 galeao_partidas.fillna({"atraso_partida": galeao_partidas["atraso_partida"].median()})
-
-galeao_partidas["timestamp"] = pd.to_datetime(galeao_partidas.timestamp, utc=True)
-galeao_chegadas["timestamp"] = pd.to_datetime(galeao_chegadas.timestamp, utc=True)
-galeao_partidas.set_index("timestamp", inplace=True)
-galeao_chegadas.set_index("timestamp", inplace=True)
 
 galeao_partidas.index = galeao_partidas.index.floor('h')
 galeao_chegadas.index = galeao_chegadas.index.floor('h')
@@ -265,3 +264,41 @@ filtro_muito_adverso = ((df_aeroporto["nivel_nuvem"] == "overcast") | ((df_aerop
 & (df_aeroporto["visibility"] < 5000))
 df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
 print(pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso_chegada"]]))
+
+print(
+"""
+6. Crie uma tabela no seguinte formato em que cada coluna é um aeroporto e
+cada linha é uma hora. Como valores, temos a média de atraso naquele aeroporto
+naquela hora. Mostre apenas as linhas que possuem atrasos maiores que 1h.
+Destes qual aeroporto tem o maior atraso acumulado?
+""")
+print("----- Atraso médio por hora das partidas ----- ")
+atraso_partidas = pd.crosstab(todos_aeroportos_partidas.index, 
+                              todos_aeroportos_partidas.ICAO, 
+                              todos_aeroportos_partidas.atraso_partida, 
+                              aggfunc="mean").fillna(0)
+
+filtro_acima_30_min = atraso_partidas.max(axis=1) > 60
+atraso_partidas_mais_30_min = atraso_partidas[filtro_acima_30_min]
+print(atraso_partidas_mais_30_min)
+print("Soma dos atrasos Galeão", atraso_partidas["SBGL"].sum())
+print("Soma dos atrasos Congonhas", atraso_partidas["SBSP"].sum())
+print("Soma dos atrasos Guarulhos", atraso_partidas["SBGR"].sum())
+print("Soma dos atrasos Santos Dumont", atraso_partidas["SBRJ"].sum())
+
+
+
+print("----- Atraso médio por hora das chegadas ----- ")
+atraso_chegadas = pd.crosstab(todos_aeroportos_chegadas.index, 
+                              todos_aeroportos_chegadas.ICAO, 
+                              todos_aeroportos_chegadas.atraso_chegada, 
+                              aggfunc="mean").fillna(0)
+
+filtro_acima_30_min = atraso_chegadas.max(axis=1) > 60
+atraso_chegadas_mais_30_min = atraso_chegadas[filtro_acima_30_min]
+print(atraso_chegadas_mais_30_min)
+
+print("Soma dos atrasos Galeão", atraso_chegadas["SBGL"].sum())
+print("Soma dos atrasos Congonhas", atraso_chegadas["SBSP"].sum())
+print("Soma dos atrasos Guarulhos", atraso_chegadas["SBGR"].sum())
+print("Soma dos atrasos Santos Dumont", atraso_chegadas["SBRJ"].sum())
