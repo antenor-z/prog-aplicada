@@ -215,8 +215,8 @@ filtro_partida_galeao = todos_aeroportos_partidas["ICAO"] == "SBGL"
 galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao]
 
 # Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
-galeao_chegadas.fillna({"atraso_chegada": galeao_chegadas["atraso_chegada"].median()})
-galeao_partidas.fillna({"atraso_partida": galeao_partidas["atraso_partida"].median()})
+galeao_chegadas.fillna({"atraso_chegada": galeao_chegadas["atraso_chegada"].median()}, inplace=True)
+galeao_partidas.fillna({"atraso_partida": galeao_partidas["atraso_partida"].median()}, inplace=True)
 
 galeao_partidas.index = galeao_partidas.index.floor('h')
 galeao_chegadas.index = galeao_chegadas.index.floor('h')
@@ -281,11 +281,6 @@ atraso_partidas = pd.crosstab(todos_aeroportos_partidas.index,
 filtro_acima_30_min = atraso_partidas.max(axis=1) > 60
 atraso_partidas_mais_30_min = atraso_partidas[filtro_acima_30_min]
 print(atraso_partidas_mais_30_min)
-print("Soma dos atrasos Galeão", atraso_partidas["SBGL"].sum())
-print("Soma dos atrasos Congonhas", atraso_partidas["SBSP"].sum())
-print("Soma dos atrasos Guarulhos", atraso_partidas["SBGR"].sum())
-print("Soma dos atrasos Santos Dumont", atraso_partidas["SBRJ"].sum())
-
 
 
 print("----- Atraso médio por hora das chegadas ----- ")
@@ -298,7 +293,17 @@ filtro_acima_30_min = atraso_chegadas.max(axis=1) > 60
 atraso_chegadas_mais_30_min = atraso_chegadas[filtro_acima_30_min]
 print(atraso_chegadas_mais_30_min)
 
-print("Soma dos atrasos Galeão", atraso_chegadas["SBGL"].sum())
-print("Soma dos atrasos Congonhas", atraso_chegadas["SBSP"].sum())
-print("Soma dos atrasos Guarulhos", atraso_chegadas["SBGR"].sum())
-print("Soma dos atrasos Santos Dumont", atraso_chegadas["SBRJ"].sum())
+somas_atrasos_partidas = todos_aeroportos_partidas.groupby('ICAO')['atraso_partida'].sum()
+somas_atrasos_chegadas = todos_aeroportos_chegadas.groupby('ICAO')['atraso_chegada'].sum()
+
+pior_atraso_partida = todos_aeroportos_partidas.groupby("ICAO")['atraso_partida'].max()
+pior_atraso_chegada = todos_aeroportos_chegadas.groupby("ICAO")['atraso_chegada'].max()
+
+soma_atrasos_df = pd.DataFrame({
+    'atraso_partida_total': somas_atrasos_partidas,
+    'pior_atraso_partida': pior_atraso_partida,
+    'atraso_chegada_total': somas_atrasos_chegadas,
+    'pior_atraso_chegada': pior_atraso_chegada,
+}).fillna(0) 
+
+print(soma_atrasos_df)
