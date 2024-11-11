@@ -15,7 +15,7 @@ print("""
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
 direção com com a mediana das direções. Completar com a mediana é usada para que
 ouliers não afetem algum cálculo de média feito com a direção do vento.
-Mostre os 20 primeiros valores ordenados por velocidade de vento.
+Mostre os 10 maiores e os 10 menores valores ordenados por velocidade de vento.
 """)
 
 df_aeroporto.timestamp = pd.to_datetime(df_aeroporto.timestamp, utc=True)
@@ -23,7 +23,9 @@ df_aeroporto.set_index("timestamp", inplace=True)
 df_aeroporto.fillna(
     {"wind_direction": df_aeroporto["wind_direction"].median(), "wind_speed": 0}, 
     inplace=True)
-print(df_aeroporto.sort_values("wind_speed", ascending=False).head(20))
+
+vento_sorted = df_aeroporto.sort_values("wind_speed", ascending=False)
+print(pd.concat([vento_sorted.head(10), vento_sorted.tail(10)]))
 
 print("\n----------------------------------------------------------------------")
 print("""

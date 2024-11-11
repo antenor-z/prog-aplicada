@@ -100,13 +100,13 @@ UTC;
 os valores ausentes de velocidade do vento com zero e os valores ausentes de 
 direção com com a mediana das direções. Completar com a mediana é usada para que
 ouliers não afetem algum cálculo de média feito com a direção do vento.
-Mostre os 20 primeiros valores ordenados por velocidade de vento.
+Mostre os 10 maiores e os 10 menores valores ordenados por velocidade de vento.
 
 * Objetivos: Preparar a coluna de vento para posterior análise. Ter uma ideia
 dos extremos de vento.
 
 * Requisitos atendidos: 2 (preenchimento de valores ausentes), 8 (medidas de
-sumarização: mediana)
+sumarização: mediana), 1 (Concatenação)
 
 ------
 
@@ -218,8 +218,9 @@ sumarização)
 ## 1
 
 O aeroporto do Galeão, em relação a velocidade de vento, teve um outlier em que 
-o vento chegou a 63 km/h no dia 29/10/2024 as 23h (UTC). O segundo vento mais 
-veloz foi 19km/h dia 26/10 as 19h (UTC).
+o vento chegou a 63 nós no dia 29/10/2024 as 23h (UTC). O segundo vento mais 
+veloz foi 19 nós dia 26/10 as 19h (UTC). *Nota:* O dado original está com
+a velocidade do vento em nós, mais na frente iremos converter para km/h.
 
 ```
                            wind_direction  wind_speed  temperature  dew_point  ...
