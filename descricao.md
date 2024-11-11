@@ -291,7 +291,7 @@ Furacao                  0
 Name: cat_vento, dtype: int64
 ```
 
-O tipo de vento mais presente é Brisa leve.
+Os tipos de ventos mais presentes são os mais fracos.
 
 Vendo a mesma informação em forma de gráfico pizza temos:
 
@@ -299,30 +299,15 @@ Vendo a mesma informação em forma de gráfico pizza temos:
 
 ### 3.2
 
-A maior quantidade de ventos de qualquer tipo ocorre em 22 graus e em outras
-temperaturas mais baixas.
+A maior quantidade de ventos de qualquer tipo ocorre em 22 graus e diminui
+monotonicamente com o aumento da temperatura.
 
 ![](./cat-vento.png)
 
 ### 3.3
 
-O tipo de vento mais forte neste aeroporto (Tempestade violenta) ocorreu em uma 
-temperatura mais baixa onde a amplitude estava zero. Porém não parece haver uma
-relação significativa entre a temperatura e o tipo de vento.
-
-```
-                    temperature                amplitude
-                            min max       mean          
-cat_vento                                               
-Calmo                        20  35  25.769231        15
-Bafagem                      20  27  22.975000         7
-Brisa leve                   20  34  24.266332        14
-Brisa fraca                  20  36  26.194595        16
-Brisa Moderada               21  35  27.555556        14
-Brisa forte                  27  34  30.750000         7
-Tempestade violenta          23  23  23.000000         0
-
-```
+A correlação entre a temperatura e a velocidade do vento é de 0.3029027092833759.
+Ou seja, há uma correlação, mas ela é leve.
 
 ### 4
 

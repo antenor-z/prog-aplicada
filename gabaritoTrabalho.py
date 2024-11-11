@@ -94,11 +94,11 @@ df_aeroporto["nivel_nuvem"] = df_aeroporto["nivel_nuvem"].replace(
 
 print("----- Tabela de frequencia percentual de tipos de nuvem -----")
 print(df_aeroporto["nivel_nuvem"].value_counts(normalize=True) * 100)
-plt.close()
 df_aeroporto["nivel_nuvem"].value_counts(normalize=True).plot.bar()
 plt.xticks(rotation=0) # Fazer a legendas ficarem visiveis
 plt.title(f"{ICAO} - Distribuição das Categorias de Nuvem")
 plt.savefig(f"{ICAO}-cat-nuvem.png")
+plt.close()
 #print(df_aeroporto)
 
 
@@ -150,8 +150,7 @@ print("----- tabela de frequencia numérica de tipos de vento -----")
 print(df_aeroporto["cat_vento"].value_counts())
 
 
-plt.close()
-df_aeroporto["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=90)
+df_aeroporto["cat_vento"].value_counts().plot.pie(autopct='%1.1f%%', startangle=0)
 plt.title("Distribuição das Categorias de Vento")
 plt.savefig("dist-cat-vento.png")
 
@@ -161,12 +160,8 @@ tabela_freq["total"] = tabela_freq.sum(axis=1)
 print(tabela_freq.sort_values("total", ascending=False))
 
 print("Item 3.3")
-tabela_freq_2 = (df_aeroporto.groupby("cat_vento", observed=True)
-      .agg({"temperature": ["min", "max", "mean"]}).
-      dropna())
-
-tabela_freq_2["amplitude"] = tabela_freq_2["temperature"]["max"]- tabela_freq_2["temperature"]["min"]
-print(tabela_freq_2)
+print("----- correlação entre a temperatura e a velocidade do vento -----")
+print(df_aeroporto["wind_speed"].corr(df_aeroporto["temperature"]))
 
 print("\n----------------------------------------------------------------------")
 print(
