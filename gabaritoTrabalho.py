@@ -83,8 +83,9 @@ print(df_aeroporto.groupby(["temperature"]).agg({"nivel_nuvem": "max"}).replace(
      2: "scattered",
      1: "few"}))
 
-# Eu só consigo fazer o replace permanente aqui porque no comando de agg eu tenho
-# que pegar o valor máximo. Só consigo fazer isto com números
+print("----- Correlação entre o pior tipo de nuvem e a temperatura -----")
+print( df_aeroporto["nivel_nuvem"].corr(df_aeroporto["temperature"]) )
+
 df_aeroporto["nivel_nuvem"] = df_aeroporto["nivel_nuvem"].replace(
     {4: "overcast",
      3: "broken",
@@ -99,6 +100,8 @@ plt.xticks(rotation=0) # Fazer a legendas ficarem visiveis
 plt.title(f"{ICAO} - Distribuição das Categorias de Nuvem")
 plt.savefig(f"{ICAO}-cat-nuvem.png")
 #print(df_aeroporto)
+
+exit()
 
 print("\n----------------------------------------------------------------------")
 print("""

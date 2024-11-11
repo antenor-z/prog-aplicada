@@ -233,11 +233,12 @@ timestamp
 
 ## 2
 
-Para o aeroporto analisado, temos uma correlação entre o a temperatura e o tipo
-mais nebuloso de nuvem. De 20 graus até 26 (inclusivo), temos apenas formações 
-totalmente encobertas.
-De 27 à 35 temos tanto nuvens (broken) como nuvens espalhadas (scattered).
-Na temperatura mais quente (36) temos poucas nuvens.
+Para o aeroporto do Galeão temos uma correlação entre o pior tipo de nuvem e a temperatura
+de -0.5444268973056255, isto significa uma correlação inversa moderada.
+
+Vendo por nível de temperatura, é fácil perceber esta correlação negativa:
+Para temperatura menores (20 a 26) temos nuvens encobertas e acima de 33
+graus temos apenas nuvens esparsas.
 
 ```
 ----- Pior nível de nuvem abaixo de 10 mil por temperatura -----
@@ -263,7 +264,7 @@ temperature
 ```
 
 Porém na maior parte do tempo tivemos poucas nuvens como mostra o gráfico de
-frequência. Porém elas são seguindas por nuvens encobertas.
+frequência.
 
 ![Galeão Distribuição das categorias de nuvem](./SBGL-cat-nuvem.png)
 
