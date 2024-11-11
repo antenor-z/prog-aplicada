@@ -156,16 +156,14 @@ Qual é o tipo de vento mais presente?
 3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
 valores de temperatura. Em qual faixa de temperatura ocorrem mais ventos?
 
-3.3. Para cada faixa de vento mostre temperatura mínima, média, máxima e desvio 
-padrão. Parece haver relação entre velocidade do vento e temperatura?
+3.3. Parece haver relação entre velocidade do vento e temperatura?
 
 * Objetivo: Discretizar as velocidades de vento em categorias comumente usadas
-na meteorologia e verificar a existência de relação entre as categorias de vento
+na meteorologia e verificar a existência de relação entre a velocidade do vento
 e a temperatura.
 
 * Requisitos atendidos: 4 (categorização com pd.cut), 3 (apply), 9 (cruzamento
-simples), 8 (medidas de sumarização (grupos simples)), 7 (gráfico pizza),
-6 (tabela de frequência com valores absolutos)
+simples), 7 (gráfico pizza), 6 (tabela de frequência com valores absolutos)
 
 ------
 

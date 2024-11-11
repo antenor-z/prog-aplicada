@@ -101,7 +101,6 @@ plt.title(f"{ICAO} - Distribuição das Categorias de Nuvem")
 plt.savefig(f"{ICAO}-cat-nuvem.png")
 #print(df_aeroporto)
 
-exit()
 
 print("\n----------------------------------------------------------------------")
 print("""
@@ -130,8 +129,7 @@ Qual é o tipo de vento mais presente?
 3.2. Mostre uma tabela de frequência com o cruzamento das categorias de vento com os
 valores de temperatura. Em qual faixa de temperatura ocorrem mais ventos?
 
-3.3. Para cada faixa de vento mostre temperatura mínima, média e máxima. 
-Parece haver relação entre velocidade do vento e temperatura?
+3.3. Parece haver relação entre velocidade do vento e temperatura?
 """)
 
 print("item 3.1")
