@@ -436,4 +436,4 @@ row_0
 
 ### 7
 O pior atraso no aeroporto de congonhas no último dia de outubro foi do 
-TAP5239 com uma 64 minutos de atraso.
+TAP5239 com 64 minutos de atraso.
