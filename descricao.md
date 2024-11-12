@@ -210,6 +210,11 @@ sumarização)
 * Objetivo: Ver o pior atraso de um dia específico em um aeroporto específico
 * Requisitos atendidos: 5 (filtro de índice e filtro de valor)
 
+8. Qual o tempo médio de atrasos médios diários do SBGL e qual a correlação com Nível de Nuvem?
+
+* Objetivo: Encontrar o tempo médio de atrasos médios diários do SBGL e relacionar como nível das nuvens, por meio de uma análise gráfica e a correlação entre eles.
+* Requisitos atendidos: 8 (Sumarização), 7 (Gráfico de linhas)
+
 
 # Conclusões
 
@@ -437,3 +442,28 @@ row_0
 ### 7
 O pior atraso no aeroporto de congonhas no último dia de outubro foi do 
 TAP5239 com 64 minutos de atraso.
+
+### 8
+
+Por meio da análise do gráfico abaixo, e a correlação de 0.7048088948027401, podemos ver que existe uma correlação forte entre o atraso dos voos, com o nível das nuvens, sugerindo que condições meteorológicas relacionadas ao tipo de nuvem podem estar associadas a aos atrasos em voos. Isso é visto, à medida que quando o nível de nuvens se torna mais carregado(overcast), os atrasos tendem a ser maiores. 
+
+Aqui está o atraso médio por dia no aeroporto Galeão:
+
+```
+timestamp_Dia
+2024-10-29 00:00:00+00:00   15.50
+2024-10-30 00:00:00+00:00   14.43
+2024-10-31 00:00:00+00:00   10.61
+2024-11-01 00:00:00+00:00   11.69
+2024-11-02 00:00:00+00:00    9.71
+2024-11-03 00:00:00+00:00    9.81
+2024-11-04 00:00:00+00:00   12.80
+2024-11-05 00:00:00+00:00   12.79
+2024-11-06 00:00:00+00:00   13.82
+2024-11-07 00:00:00+00:00    9.02
+Name: atraso_medio, dtype: float64
+```
+
+Gráfico que mostra o atraso médio e o ponto máximo do nível das nuvens no dia. Mostrando que os maiores atrasos foram dias com nuvens mais carregadas e o de menor atraso com o céu mais limpo.
+
+![](Figure_2.png)
