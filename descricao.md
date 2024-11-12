@@ -167,7 +167,7 @@ simples), 7 (gráfico pizza), 6 (tabela de frequência com valores absolutos)
 
 ------
 
-4. Junte os dataframes de dados de voo de um mesmo aeroporto.
+4. Junte os dataframes de dados de voo do aeroporto do Galeão.
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
 
@@ -188,7 +188,7 @@ que quanto mais baixo, maior chance de chuva. Quando a diferença é zero, temos
 e filtre por tempo muito nebuloso ou visibiliade menor que 5km.
 
 * Objetivo: Criar uma medida proporcional a chance a chuva e verificar se esta 
-medida influencia nos atrasos.
+medida influencia nos atrasos em condições adversas de tempo.
 
 * Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro)
 
@@ -196,10 +196,10 @@ medida influencia nos atrasos.
 
 6. Crie uma tabela no seguinte formato em que cada coluna é um aeroporto e
 cada linha é uma hora. Como valores, temos a média de atraso naquele aeroporto
-naquela hora. Mostre apenas as linhas que possuem atrasos maiores que 1h.
+naquela hora. Mostre apenas as linhas que possuem em algum aeroporto atrasos maiores que 1h.
 Destes qual aeroporto tem o maior atraso acumulado?
 
-* Objetivo: Ver qual aeroporto tem o pior somatório de atrasos
+* Objetivo: Ver qual aeroporto tem o pior somatório de atrasos extremos.
 * Requisitos atendidos: 9 (cruzamento estruturado), 5 (filtro), 8 (medidas de
 sumarização)
 
@@ -312,71 +312,57 @@ Ou seja, há uma correlação, mas ela é leve.
 ### 4
 
 
-Para partidas, nuvem do tipo few (poucas) parece influenciar atraso médio (10 a 30 min).
+Para partidas, nuvem do tipo few (poucas) parece influenciar muito atraso médio 
+(10 a 30 min). Para chegadas o mesmo tipo few incluencia baixo atraso (menor que
+10 min).
+
+Para as categorias de vento a brisa leve parece causar atrasos médios nas partidas.
+Nas chegadas ela causa atrasos baixos.
+
 ```
 ----- Crosstab nível de nuvem x atraso partida -----
-nivel_nuvem       broken  few  overcast  scattered
-atraso_partida                                    
-baixo atraso           8   63        18         14
-médio atraso          31  312        41         58
-alto atraso           12   99         0         22
-altíssimo atraso       0   25         0          1
-```
-
-Para chegadas o mesmo tipo de nuvem influencia baixo atraso.
-
-```
+nivel_nuvem       broken   few  overcast  scattered
+atraso_partida                                     
+baixo atraso          82   394       192        141
+médio atraso         178  1387         0        342
+alto atraso            0   253         0          6
+altíssimo atraso      12    82         0         39
 ----- Crosstab nível de nuvem x atraso chegada -----
-nivel_nuvem       broken  few  overcast  scattered
-atraso_chegada                                    
-baixo atraso          45  456        50         87
-médio atraso           1   32         7          8
-alto atraso            5    7         0          0
-altíssimo atraso       0    4         2          0
-```
-
-Ao contrário do que eu achada, ventos muito fortes não parecem causar mais atrasos.
-A maioria dos atrasos se concentram em Brisa leve (6 a 11km/h). Mas o vento
-um pouco mais forte (Brisa fraca, 12 a 19km/h) foi o único tipo que causou altísimo
-atraso (mais que uma hora).
-
-```
+nivel_nuvem       broken   few  overcast  scattered
+atraso_chegada                                     
+baixo atraso         251  1951       167        455
+médio atraso           6   120        15         73
+alto atraso           15    29         0          0
+altíssimo atraso       0    16        10          0
 ----- Crosstab categoria do vento x atraso partida -----
 cat_vento         Calmo  Bafagem  Brisa leve  Brisa fraca  Brisa Moderada  Brisa forte
 atraso_partida                                                                        
-baixo atraso          0       11          79           40               1            0
-médio atraso         41       12         370          110              13            1
-alto atraso           0       43          57           32               3            0
-altíssimo atraso      0        0           0           30               0            0
-```
-
-Para as chegadas, temos menos atrasos em geral que foram causados principalmente por
-brisa leve e fraca.
-
-```
+baixo atraso          0       90         528          286              18            0
+médio atraso        242      248        1569          350              63            3
+alto atraso           0       48         149           71               6            0
+altíssimo atraso      0       38           0          103               0            0
 ----- Crosstab categoria do vento x atraso chegada -----
 cat_vento         Calmo  Bafagem  Brisa leve  Brisa fraca  Brisa Moderada  Brisa forte
 atraso_chegada                                                                        
-baixo atraso         41       64         463          190              13            1
-médio atraso          0        2          34           15               2            0
-alto atraso           0        0           5            7               0            0
-altíssimo atraso      0        0           4            0               2            0
+baixo atraso        242      420        2068          703              77            3
+médio atraso          0        4         141           78               6            0
+alto atraso           0        0          15           29               0            0
+altíssimo atraso      0        0          22            0               4            0
 ```
 
 ### 5
 
 Uma maior chance de chuva influencia na quantidade de atrasos como mostra a
-tabela abaixo. Em três graus de diferença temos bem mais atrados que em diferenças
-maiores.
+tabela abaixo. Mas os mais longos atrasos e a maior quantidade de atrasos se
+concentram quando a diferença é de 4 graus.
 
 ```
-nivel_nuvem overcast                                total_atrasos
-atraso          10.0 12.0 14.0 16.0 17.0 32.0 246.0              
-diff_temp                                                        
-3                  0    0    0   31    0    6     0            37
-4                  6    0    0    0    0    0     2             8
-5                  0    9    0    0    0    0     0             9
-6                  0    1    2    1    1    0     0             5
+nivel_nuvem overcast                                   total_atrasos
+atraso           2.0 4.0 5.0 6.0 10.0 12.0 124.0 126.0              
+diff_temp                                                           
+3                  0   6   0   0    0   12     0     0            18
+4                 24   6   0   0    0    0     8     2            40
+6                  0   1   4   1    2    0     0     0             8
 ```
 
 ### 6
@@ -447,3 +433,7 @@ row_0
 2024-11-06 08:00:00+00:00    4.375000   1.0  82.00    0.000000
 2024-11-07 10:00:00+00:00    2.428571   0.0  62.00   17.571429
 ```
+
+### 7
+O pior atraso no aeroporto de congonhas no último dia de outubro foi do 
+TAP5239 com uma 64 minutos de atraso.

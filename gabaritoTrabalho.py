@@ -166,7 +166,7 @@ print(df_aeroporto["wind_speed"].corr(df_aeroporto["temperature"]))
 print("\n----------------------------------------------------------------------")
 print(
 """
-4. Junte os dataframes de dados de voo de um mesmo aeroporto.
+4. Junte os dataframes de dados de voo do aeroporto do Galeão.
 Faça um Merge da tabela de condições meteorológicas com os atrasos. Crie as 
 colunas atraso_chegada e atraso_partida.
 
@@ -174,9 +174,6 @@ Faça o cruzamento de frequência entre o nível do vento e os atrasos e entre
 a pior formação de nuvens e os atrasos. Parece haver uma correlação?
 """
 )
-
-galeao_partidas = pd.DataFrame()
-galeao_chegadas = pd.DataFrame()
 
 todos_aeroportos_partidas = pd.DataFrame()
 todos_aeroportos_chegadas = pd.DataFrame()
@@ -214,16 +211,15 @@ galeao_chegadas = todos_aeroportos_chegadas[filtro_chegada_galeao]
 filtro_partida_galeao = todos_aeroportos_partidas["ICAO"] == "SBGL"
 galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao]
 
-# Usando a mediana para mascarar valores ausentes, porque é menos sensível à outliers
-galeao_chegadas.fillna({"atraso_chegada": galeao_chegadas["atraso_chegada"].median()}, inplace=True)
-galeao_partidas.fillna({"atraso_partida": galeao_partidas["atraso_partida"].median()}, inplace=True)
+# Quando o atraso é NaN, significa que o voo partiu/chegou na hora
+galeao_chegadas.fillna({"atraso_chegada": 0}, inplace=True)
+galeao_partidas.fillna({"atraso_partida": 0}, inplace=True)
+
 
 galeao_partidas.index = galeao_partidas.index.floor('h')
 galeao_chegadas.index = galeao_chegadas.index.floor('h')
 
-galeao_partidas = galeao_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
 galeao_partidas.sort_index(inplace=True)
-galeao_chegadas = galeao_chegadas.groupby("timestamp").agg({"atraso_chegada": "mean"})
 galeao_chegadas.sort_index(inplace=True)
 
 df_aeroporto = df_aeroporto.merge(galeao_partidas, how="inner", on="timestamp")
@@ -250,14 +246,15 @@ e filtre por tempo muito nebuloso ou visibiliade menor que 5km.
 """)
 
 df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
-df_aeroporto["diff_temp"] = df_aeroporto["temperature"] - df_aeroporto["dew_point"]
 
 filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
-df_aeroporto = df_aeroporto[filtro_maior_10]
+df_aeroporto_10 = df_aeroporto[filtro_maior_10]
 
-filtro_muito_adverso = (df_aeroporto["nivel_nuvem"] == "overcast") | (df_aeroporto["visibility"] < 5000)
-df_aeroporto_adverso = df_aeroporto[filtro_muito_adverso]
-df_aeroporto_adverso["atraso"] = round(df_aeroporto_adverso["atraso_chegada"] + df_aeroporto_adverso["atraso_partida"] / 2)
+filtro_muito_adverso = (df_aeroporto_10["nivel_nuvem"] == "overcast") | (df_aeroporto_10["visibility"] < 5000)
+df_aeroporto_adverso = df_aeroporto_10[filtro_muito_adverso]
+df_aeroporto_adverso["atraso"] = round((df_aeroporto_adverso["atraso_chegada"] + df_aeroporto_adverso["atraso_partida"]) / 2)
+filtro_apenas_atraso = df_aeroporto_adverso["atraso"] > 0
+df_aeroporto_adverso = df_aeroporto_adverso[filtro_apenas_atraso]
 cross = pd.crosstab(df_aeroporto_adverso["diff_temp"] , [df_aeroporto_adverso["nivel_nuvem"], df_aeroporto_adverso["atraso"]])
 cross["total_atrasos"] = cross.sum(axis=1)
 print(cross)
@@ -269,22 +266,20 @@ cada linha é uma hora. Como valores, temos a média de atraso naquele aeroporto
 naquela hora. Mostre apenas as linhas que possuem atrasos maiores que 1h.
 Destes qual aeroporto tem o maior atraso acumulado?
 """)
-print("----- Atraso médio por hora das partidas ----- ")
+print("----- Atraso médio por hora das partidas acima de 1h ----- ")
 todos_aeroportos_partidas.index = todos_aeroportos_partidas.index.floor('h')
-todos_aeroportos_partidas.groupby("timestamp").agg({"atraso_partida": "mean"})
-atraso_partidas = pd.crosstab(todos_aeroportos_partidas.index, 
-                              todos_aeroportos_partidas.ICAO, 
-                              todos_aeroportos_partidas.atraso_partida, 
+filtro_acima_60_min = todos_aeroportos_partidas.max(axis=1) > 60
+todos_aeroportos_partidas_60 = todos_aeroportos_partidas[filtro_acima_60_min]
+
+atraso_partidas = pd.crosstab(todos_aeroportos_partidas_60.index, 
+                              todos_aeroportos_partidas_60.ICAO, 
+                              todos_aeroportos_partidas_60.atraso_partida, 
                               aggfunc="mean").fillna(0)
 
-filtro_acima_30_min = atraso_partidas.max(axis=1) > 60
-atraso_partidas_mais_30_min = atraso_partidas[filtro_acima_30_min]
-print(atraso_partidas_mais_30_min)
-
+print(atraso_partidas)
 
 print("----- Atraso médio por hora das chegadas ----- ")
 todos_aeroportos_chegadas.index = todos_aeroportos_chegadas.index.floor('h')
-todos_aeroportos_chegadas.groupby("timestamp").agg({"atraso_chegada": "mean"})
 atraso_chegadas = pd.crosstab(todos_aeroportos_chegadas.index, 
                               todos_aeroportos_chegadas.ICAO, 
                               todos_aeroportos_chegadas.atraso_chegada, 
