@@ -305,9 +305,51 @@ soma_atrasos_df = pd.DataFrame({
 print(soma_atrasos_df)
 
 print("""
-Qual foi o pior atraso no aeroporto de congonhas no último dia de outubro?   
+7. Qual foi o pior atraso no aeroporto de congonhas no último dia de outubro?   
 """)
 filtro_sbsp = todos_aeroportos_partidas["ICAO"] == "SBSP"
 filtro_dia = todos_aeroportos_partidas.index.date == pd.to_datetime('2024-10-31').date()
 
 print(todos_aeroportos_partidas[filtro_sbsp & filtro_dia].max())
+
+print("""
+8. Qual o tempo médio de atrasos médios diários do SBGL e qual a correlação com Nível de Nuvem ? """)
+
+galeao_partidas["timestamp_Dia"] = galeao_partidas.index.floor('d')
+galeao_chegadas["timestamp_Dia"]= galeao_chegadas.index.floor('d')
+atrasoPartida = galeao_partidas.groupby("timestamp_Dia").agg({"atraso_partida": "sum"})
+atrasosChegadas = galeao_chegadas.groupby("timestamp_Dia").agg({"atraso_chegada": "sum"})
+atrasos_diarios = pd.merge(atrasoPartida, atrasosChegadas, on='timestamp_Dia', how='inner')
+atrasos_diarios['atraso_medio'] = (atrasos_diarios['atraso_partida'] + atrasos_diarios['atraso_chegada']) / 120
+df_aeroporto["timestamp_dia"] = df_aeroporto.index.floor('d')
+df_aeroporto["nivel_nuvem_numerico"] = df_aeroporto["nivel_nuvem"].replace(
+    {
+        "overcast": 4,
+        "broken": 3,
+        "scattered": 2,
+        "few": 1,
+    }
+)
+media_por_dia = df_aeroporto.groupby("timestamp_dia").agg({"nivel_nuvem_numerico": "max"})
+
+atraso_medio = atrasos_diarios['atraso_medio'].head(10)
+print(atraso_medio)
+nivel_nuvem = media_por_dia['nivel_nuvem_numerico'].head(10)
+
+plt.figure()
+plt.plot(atraso_medio, label='Atraso Médio', marker='o')
+plt.plot(nivel_nuvem, label='Nível de Nuvem Numérico', marker='o')
+plt.xlabel('Índice')
+plt.ylabel('Valores')
+plt.title('Atraso Médio e Nível de Nuvem')
+plt.legend()
+plt.grid(True)
+plt.show()
+
+
+df_temp = pd.DataFrame({
+    'Atraso Médio': atraso_medio,
+    'Nível de Nuvem Numérico': nivel_nuvem
+})
+correlacao = df_temp.corr().loc['Atraso Médio', 'Nível de Nuvem Numérico']
+print(f"A correlação entre Atraso Médio e Nível de Nuvem é: {correlacao}")
