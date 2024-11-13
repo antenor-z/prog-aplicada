@@ -212,6 +212,8 @@ filtro_partida_galeao = todos_aeroportos_partidas["ICAO"] == "SBGL"
 galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao]
 
 # Quando o atraso é NaN, significa que o voo partiu/chegou na hora
+galeao_chegadas = todos_aeroportos_chegadas[filtro_chegada_galeao].copy()
+galeao_partidas = todos_aeroportos_partidas[filtro_partida_galeao].copy()
 galeao_chegadas.fillna({"atraso_chegada": 0}, inplace=True)
 galeao_partidas.fillna({"atraso_partida": 0}, inplace=True)
 
@@ -251,6 +253,7 @@ filtro_maior_10 = df_aeroporto["diff_temp"] <= 10
 df_aeroporto_10 = df_aeroporto[filtro_maior_10]
 
 filtro_muito_adverso = (df_aeroporto_10["nivel_nuvem"] == "overcast") | (df_aeroporto_10["visibility"] < 5000)
+df_aeroporto_adverso = df_aeroporto.copy()
 df_aeroporto_adverso = df_aeroporto_10[filtro_muito_adverso]
 df_aeroporto_adverso["atraso"] = round((df_aeroporto_adverso["atraso_chegada"] + df_aeroporto_adverso["atraso_partida"]) / 2)
 filtro_apenas_atraso = df_aeroporto_adverso["atraso"] > 0

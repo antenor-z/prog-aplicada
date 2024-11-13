@@ -5,6 +5,10 @@ Antenor Barros Leal \
 Guilherme Montenegro Banharo
 
 -----------
+# Antes de tudo
+Descompacte o arquivo dados.zip. Após a descopactação e para existir as pastas
+aeroportos e voos. A pasta aeroportos com quatro arquivos e a pasta voos com 
+124 arquivos.
 
 # Resumo
 Este trabalho detalha o processamento e análise de dados meteorológicos e de 
